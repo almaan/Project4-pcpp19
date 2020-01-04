@@ -3,7 +3,7 @@
 #include <cmath>
 
 #include "GFkt.h"
-#include "matrix.h"
+#include "matrix/matrix.h"
 #include "dom/domain.h"
 
 

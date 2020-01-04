@@ -23,9 +23,10 @@ private:
 public:
 		Domain(); //Default constructur
 		Domain(Curvebase &s1, Curvebase &s2,
-			   Curvebase &s3, Curvebase &s4); //constructor when provided four boundary curves
+          Curvebase &s3, Curvebase &s4); //constructor when provided four boundary curves
 		Domain(const Domain &d); //copy  constructor
 		Domain& operator=(const Domain &d); //assignment operator overloading
+    Point operator()(int i, int j);
 		~Domain(); //default destructor
 
 		void check_consistency(void);//assign proper side-identity to boundary curves
@@ -37,6 +38,7 @@ public:
 
 		void printCoordinates(void);//print the coordinates as comma separated tuples
 		void saveCoordinates(bool user_input);//save coordinates.
+
     int xsize(void) const; 
     int ysize(void) const; 
     int npoints(void) const;
