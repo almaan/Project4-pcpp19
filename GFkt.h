@@ -2,6 +2,7 @@
 #define _GFKT
 
 #include <iostream>
+#include <memory>
 
 #include "matrix/matrix.h"
 #include "dom/domain.h"
@@ -10,12 +11,12 @@ class GFkt {
 
 private:
   Matrix u;
-  Domain *grid;
+  std::shared_ptr<Domain> grid;
   double dxh, dyh;
 
 public:
 
-  GFkt(Domain * grid_) :
+  GFkt(std::shared_ptr<Domain> grid_) :
     u(grid_->xsize()+1,grid_->ysize()+1),
     grid(grid_) {setDelta();}
 
@@ -49,6 +50,7 @@ public:
   Point<double> dyd(int i, int j) const;
   GFkt D0x() const;
   GFkt D0y() const;
+  GFkt del() const;
   void printMat(void) const;
   void fillMat(void);
   double fun (double x, double y);

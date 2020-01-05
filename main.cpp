@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 #include <string>
+#include <memory>
 #include "dom/hline.h"
 #include "dom/vline.h"
 #include "dom/domain.h"
@@ -186,7 +187,7 @@ int main(){
 
   Matrix M(n_rows,n_cols);
 
-  GFkt gf(&omega);
+  GFkt gf(std::make_shared<Domain>(omega));
   gf.fillMat();
   gf.printMat();
 
@@ -211,8 +212,6 @@ int main(){
 
     double valy = dgy.getFuncVal(a,b);
     Point<double> Py = dgy.getGridVal(a,b);
-
-
 
     std::cout << "Derivative" << std::endl;
     std::cout << "x :: crd: " << P << " | e-val : " << val;

@@ -11,7 +11,7 @@
 class Domain {
 
 private:
-    Curvebase *sides[4]; //Holder for boundary curves
+    std::shared_ptr<Curvebase> sides[4]; //Holder for boundary curves
 		double *x_, *y_; //arrays for coordinate vectors, pointers for Dynamic Memory Allocation 
 		int m_, n_; //number of intervals in vertical (m) and horizontal (n) direction
 		int n_points; //total number of points
@@ -23,8 +23,14 @@ private:
 
 public:
 		Domain(); //Default constructur
-		Domain(Curvebase &s1, Curvebase &s2,
-          Curvebase &s3, Curvebase &s4); //constructor when provided four boundary curves
+  //		Domain(Curvebase &s1, Curvebase &s2,
+  //          Curvebase &s3, Curvebase &s4); //constructor when provided four boundary curves
+    Domain(Curvebase & s1,
+           Curvebase & s2,
+           Curvebase & s3,
+           Curvebase & s4);
+
+
 		Domain(const Domain &d); //copy  constructor
 		Domain& operator=(const Domain &d); //assignment operator overloading
     const Point<double> operator()(int i, int j) const;
@@ -33,7 +39,7 @@ public:
 		void check_consistency(void);//assign proper side-identity to boundary curves
 		void make_grid (int m, int n);//make a mxn-grid over the domain. Will remove old grid.
 
-		Curvebase * getSide(int s);//reuturns the boundary curve of provided identity
+    std::shared_ptr<Curvebase> getSide(int s);//reuturns the boundary curve of provided identity
 		double sigmaT(double s);//distribution of y-coordinates when refinement is used
 		void doLowerResolve(bool a);//will increase resolution of lower boundary if true
 
@@ -44,12 +50,6 @@ public:
     int ysize(void) const; 
     int npoints(void) const;
   
-    double dxdsmap(double r, double s);
-    double dxdrmap(double r, double s);
-
-    double dydsmap(double r, double s);
-    double dydrmap(double r, double s);
-
     bool grid_valid() const;
 
 };

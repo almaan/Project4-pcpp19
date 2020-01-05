@@ -170,14 +170,6 @@ Point<double> GFkt::dyd( int i, int j) const {
 }
 
 
-//Point<double> GFkt::dyd( int i, int j) const {
-//  Point<double> Dp1 = (*grid)(i,j+1);
-//  Point<double> Dm1 = (*grid)(i,j-1);
-//  Point<double> D = (Dp1 - Dm1);
-//  D *= 0.5* (1.0 / dyh);
-//  return D;
-//}
-
 GFkt GFkt::D0x() const {
   if (grid->grid_valid()) {
     // generate derivative in tmp
@@ -245,6 +237,17 @@ GFkt GFkt::D0y() const {
       return error();
     }
 }
+
+GFkt GFkt::del(void) const {
+  GFkt x_part(this->grid), y_part(this->grid);
+  x_part = this->D0x();
+  x_part = x_part.D0x();
+  y_part = this->D0y();
+  y_part = y_part.D0y();
+
+  return x_part + y_part;
+}
+
 
 void GFkt::printMat(void) const {
   this->u.print_matrix();

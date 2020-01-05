@@ -58,10 +58,10 @@ Domain & Domain::operator=(const Domain &d) {
 //constructor taking four boundary curves
 //representing the four sides of the domain
 //boundary curves can be passed in any arbitrary order
-Domain::Domain(Curvebase &s1,
-               Curvebase &s2,
-               Curvebase &s3,
-               Curvebase &s4) : m_(0), n_(0), x_(nullptr),y_(nullptr)
+Domain::Domain(Curvebase& s1,
+               Curvebase& s2,
+               Curvebase& s3,
+               Curvebase& s4) : m_(0), n_(0), x_(nullptr),y_(nullptr)
 {
 	
 
@@ -70,10 +70,10 @@ Domain::Domain(Curvebase &s1,
 	//is 0-left 1-bottom 2-right 3-top
 	//this is adjusted after initial assignation
 
-	sides[0] = &s1; //left side
-	sides[1] = &s2; //bottom side
-	sides[2] = &s3; //right side
-	sides[3] = &s4; //top side
+	sides[0] = std::shared_ptr<Curvebase>(&s1); //left side
+	sides[1] = std::shared_ptr<Curvebase>(&s2); //bottom side
+  sides[2] = std::shared_ptr<Curvebase>(&s3); //right side
+	sides[3] = std::shared_ptr<Curvebase>(&s4); //top side
 
 	//adjust boundary curve positioning in sides array
 	//as to be consistent with above described convention
@@ -87,7 +87,7 @@ Domain::Domain(Curvebase &s1,
 
 //returns pointer to boudary curve of sides array
 //with the provided index "s"
-Curvebase * Domain::getSide(int s) {
+std::shared_ptr<Curvebase>  Domain::getSide(int s) {
 	return sides[s];
 };
 
@@ -122,63 +122,6 @@ double Domain::xmap(double r, double s) {
 	return pos - neg;
 };
 
-double Domain::dxdrmap(double r, double s) {
-
-	//raise warning if r or s are not in [0,1]
-	if (s < 0 || s > 1 || r < 0 || r > 1) {
-		std::cout << "x(r,s) : parameters out of bound" << std::endl;
-	}
-
-	//transform relative y-coordinate if adjusted
-	//resolution should be used
-	if (lower_resolve){
-		s = sigmaT(s);
-	}
-
-	//transfinite interpolation
-
-	//positive terms
-	double pos = -(sides[0]->x(s)) +
-    sides[2]->x(s);
-
-	//negative terms
-	double neg = -1.0*(1.-s)*sides[0]->x(0.0) + 
-    (1.-s)*sides[1]->x(1.0) +
-    (-1.0)*s*sides[3]->x(0.0) +
-    s*sides[2]->x(1.0); 
-
-	return pos - neg;
-};
-
-double Domain::dxdsmap(double r, double s) {
-
-	//raise warning if r or s are not in [0,1]
-	if (s < 0 || s > 1 || r < 0 || r > 1) {
-		std::cout << "x(r,s) : parameters out of bound" << std::endl;
-	}
-
-	//transform relative y-coordinate if adjusted
-	//resolution should be used
-	if (lower_resolve){
-		s = sigmaT(s);
-	}
-
-	//transfinite interpolation
-
-	//positive terms
-	double pos = (-1.0)*sides[1]->x(r) +
-    sides[3]->x(r);
-
-	//negative terms
-	double neg = (1.-r)*(-1.0)*sides[0]->x(0.0) + 
-    r*(-1.0)*sides[1]->x(1.0) +
-    (1-r)*sides[3]->x(0.0) +
-    r*sides[2]->x(1.0); 
-
-	return pos - neg;
-};
-
-
 
 double Domain::ymap(double r, double s) {
 
@@ -211,61 +154,6 @@ double Domain::ymap(double r, double s) {
 	return pos - neg;
 };
 
-double Domain::dydrmap(double r, double s) {
-
-	//raise warning if r or s are not in [0,1]
-	if (s < 0 || s > 1 || r < 0 || r > 1) {
-		std::cout << "y(r,s) : parameters out of bound" << std::endl;
-	}
-
-	//transform relative y-coordinate if adjusted
-	//resolution should be used
-	if (lower_resolve){
-		s = sigmaT(s);
-	}
-
-	//transfinite interpolation
-
-	//positive terms
-	double pos = -(sides[0]->y(s)) +
-    sides[2]->y(s);
-
-	//negative terms
-	double neg = -1.0*(1.-s)*sides[0]->y(0.0) + 
-    (1.-s)*sides[1]->y(1.0) +
-    (-1.0)*s*sides[3]->y(0.0) +
-    s*sides[2]->y(1.0); 
-
-	return pos - neg;
-};
-
-double Domain::dydsmap(double r, double s) {
-
-	//raise warning if r or s are not in [0,1]
-	if (s < 0 || s > 1 || r < 0 || r > 1) {
-		std::cout << "y(r,s) : parameters out of bound" << std::endl;
-	}
-
-	//transform relative y-coordinate if adjusted
-	//resolution should be used
-	if (lower_resolve){
-		s = sigmaT(s);
-	}
-
-	//transfinite interpolation
-
-	//positive terms
-	double pos = (-1.0)*sides[1]->y(r) +
-    sides[3]->y(r);
-
-	//negative terms
-	double neg = (1.-r)*(-1.0)*sides[0]->y(0.0) + 
-    r*(-1.0)*sides[1]->y(1.0) +
-    (1-r)*sides[3]->y(0.0) +
-    r*sides[2]->y(1.0); 
-
-	return pos - neg;
-};
 
 
 //function to generate grid over domain
