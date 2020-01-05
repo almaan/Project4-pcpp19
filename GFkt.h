@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "matrix.h"
+#include "matrix/matrix.h"
 #include "dom/domain.h"
 
 class GFkt {
@@ -45,10 +45,16 @@ public:
 
   double dudxh(int i, int j) const;
   double dudyh(int i, int j) const;
+  Point<double> dxd(int i, int j) const;
+  Point<double> dyd(int i, int j) const;
   GFkt D0x() const;
+  GFkt D0y() const;
   void printMat(void) const;
   void fillMat(void);
   double fun (double x, double y);
+
+  Point<double> getGridVal(int i, int j) const;
+  double getFuncVal(int i, int j) const;
 
 };
 

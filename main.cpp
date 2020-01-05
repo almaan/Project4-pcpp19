@@ -7,7 +7,7 @@
 #include "dom/hline.h"
 #include "dom/vline.h"
 #include "dom/domain.h"
-#include "matrix.h"
+#include "matrix/matrix.h"
 #include "GFkt.h"
 
 
@@ -189,6 +189,45 @@ int main(){
   GFkt gf(&omega);
   gf.fillMat();
   gf.printMat();
+
+  GFkt dgf(gf);
+  GFkt dgy(gf);
+
+  dgf = gf.D0x();
+  dgy = gf.D0y();
+
+  bool keepOn = true;
+  int a,b;
+  char ans;
+
+  while (keepOn) {
+    std::cout << "x >> ";
+    std::cin >> a;
+    std::cout << "y >> ";
+    std::cin >> b;
+
+    double val = dgf.getFuncVal(a,b);
+    Point<double> P = dgf.getGridVal(a,b);
+
+    double valy = dgy.getFuncVal(a,b);
+    Point<double> Py = dgy.getGridVal(a,b);
+
+
+
+    std::cout << "Derivative" << std::endl;
+    std::cout << "x :: crd: " << P << " | e-val : " << val;
+    std::cout << " | t-val : " << P.getX()*2 + 3*P.getY() + 0.5 << std::endl;
+
+    std::cout << "y :: crd: " << Py << " | e-val : " << valy;
+    std::cout << " | t-val : " << 3.0*Py.getX() << std::endl;
+
+    std::cout << "continue (y/n) >> ";
+    std::cin >> ans;
+
+    if (ans != 'y'){
+      keepOn = false;
+    }
+  }
 
 	return 0;
 }

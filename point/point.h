@@ -1,6 +1,8 @@
 #include <iostream>
-#include <cmath>
+#include <iomanip>
 
+#ifndef _POINT
+#define _POINT
 
 template < typename T >
 class Point {
@@ -107,26 +109,38 @@ public:
     return *this;
   }
 
-
-
   void printPoint(){
     std::cout << "( " << this->x_ << ", " << this->y_ << " )" << std::endl;
   }
 
+  void setX(T x) {
+    this->x_ = x;
+  }
+
+  void setY(T y) {
+    this->y_ = y;
+  }
+
+  const T getX(void) const {
+    return this->x_;
+  }
+
+  const T getY(void) const {
+    return this->y_;
+  }
+
+  template<typename S>
+  friend std::ostream& operator<<(std::ostream& os, const Point<S>& P);
 };
 
-
-int main(){
-
-  Point<double> P(3.0,4.0);
-  Point<double> Q(1.5,1.2);
-
-  Point<double> A = P + Q;
-  A.printPoint();
-  A += 3;
-  A.printPoint();
-  A = A * 9;
-  A.printPoint();
-
-
+template<typename S>
+std::ostream& operator<<(std::ostream& os, const Point<S>& P)
+{
+  os << "( " << P.getX() <<  " , " << P.getY() << " )";
+  return os;
 }
+
+#endif
+
+
+

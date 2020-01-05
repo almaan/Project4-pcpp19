@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "domain.h"
+#include "../point/point.h"
 
 /*
 
@@ -57,8 +58,11 @@ Domain & Domain::operator=(const Domain &d) {
 //constructor taking four boundary curves
 //representing the four sides of the domain
 //boundary curves can be passed in any arbitrary order
-Domain::Domain(Curvebase &s1, Curvebase &s2,
-			   Curvebase &s3, Curvebase &s4){
+Domain::Domain(Curvebase &s1,
+               Curvebase &s2,
+               Curvebase &s3,
+               Curvebase &s4) : m_(0), n_(0), x_(nullptr),y_(nullptr)
+{
 	
 
 	//assign curves to sides array
@@ -192,6 +196,7 @@ double Domain::ymap(double r, double s) {
 
 	//transfinite interpolation
 
+
 	//positive terms
 	double pos = (1. - r)*sides[0]->y(s) +
 				  r*sides[2]->y(s) + 
@@ -210,7 +215,7 @@ double Domain::dydrmap(double r, double s) {
 
 	//raise warning if r or s are not in [0,1]
 	if (s < 0 || s > 1 || r < 0 || r > 1) {
-		std::cout << "x(r,s) : parameters out of bound" << std::endl;
+		std::cout << "y(r,s) : parameters out of bound" << std::endl;
 	}
 
 	//transform relative y-coordinate if adjusted
@@ -238,7 +243,7 @@ double Domain::dydsmap(double r, double s) {
 
 	//raise warning if r or s are not in [0,1]
 	if (s < 0 || s > 1 || r < 0 || r > 1) {
-		std::cout << "x(r,s) : parameters out of bound" << std::endl;
+		std::cout << "y(r,s) : parameters out of bound" << std::endl;
 	}
 
 	//transform relative y-coordinate if adjusted
@@ -412,9 +417,17 @@ void Domain::saveCoordinates(bool user_input = false) {
 };
 
 bool Domain::grid_valid(void) const {
-  if (this->m_*this->n_ > 0){
-    return true;
+  return this->m_*this->n_ > 0;
+}
+
+const Point<double> Domain::operator()(int i, int j) const{
+  Point <double>P;
+  if (this->grid_valid()){
+    P.setX(x_[i + this->m_*j]);
+    P.setY(y_[i + this->m_*j]);
   } else {
-    return false;
+    std::cout << "ERROR : Can't access elements when";
+    std::cout << "no grid is defined." << std::endl;
   }
+  return P;
 }

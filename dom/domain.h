@@ -1,8 +1,9 @@
 #ifndef _DOMAIN
 #define _DOMAIN
 
-#include "curvebase.h"
 #include <memory>
+#include "curvebase.h"
+#include "../point/point.h"
 
 //class to represent four sided domains
 //allows user to generate grids of desired size
@@ -26,7 +27,7 @@ public:
           Curvebase &s3, Curvebase &s4); //constructor when provided four boundary curves
 		Domain(const Domain &d); //copy  constructor
 		Domain& operator=(const Domain &d); //assignment operator overloading
-    Point operator()(int i, int j);
+    const Point<double> operator()(int i, int j) const;
 		~Domain(); //default destructor
 
 		void check_consistency(void);//assign proper side-identity to boundary curves
