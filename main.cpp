@@ -182,39 +182,43 @@ int main(){
 	std::cout << "\n" << std::endl;
 	std::cout << "boundary curves defined above to generate domain Omega" << std::endl;
 
-	Domain omega(botb,topb,rightb,leftb);
+  Domain omega(botb,topb,rightb,leftb);
 
-	int n_rows = 12;
-	int n_cols = 7;
+	int n_rows = 100;
+	int n_cols = 200;
 
-	omega.make_grid(n_rows, n_cols);
-
-  Matrix M(omega.xsize(),omega.ysize());
+  omega.make_grid(n_rows, n_cols);
 
   GFkt gf(std::make_shared<Domain>(omega));
-  gf.fillMat(ufun);
 
-  GFkt dudx(gf);
+  gf.fillMat(ufun);
+  std::cout << "here0" << std::endl;
+  // GFkt dudx(gf);
   std::cout << "here0.8" << std::endl;
-  GFkt dudy(gf);
-  GFkt ulap(gf);
+  // GFkt dudy(gf.D0y());
+  // GFkt ulap(gf.del());
+  // dudx = gf.D0x();
 
   std::cout << "here1" << std::endl;
+  // std::cout << "uno" << std::endl;
+  // dudy = gf.D0y();
+  // std::cout << "dos" << std::endl;
+  // ulap = gf.del();
+  // std::cout << "tres" << std::endl;
 
-  dudx = gf.D0x();
-  dudy = gf.D0y();
-  ulap = gf.del();
 
-  std::string ufundir = "res/ufun";
+  // std::string ufundir = "res/ufun";
   std::string dudxdir = "res/partial_x";
-  std::string dudydir = "res/partial_y";
-  std::string ulapdir = "res/laplacian";
+  std::cout << "set oname" << std::endl;
 
-  gf.saveData(ufundir);
-  dudx.saveData(dudxdir);
-  dudy.saveData(dudydir);
-  ulap.saveData(ulapdir);
-  //  ulap.saveData("res/laplacian");
+  // std::string dudydir = "res/partial_y";
+  // std::string ulapdir = "res/laplacian";
+
+  // gf.saveData(ufundir);
+  // dudx.saveData(dudxdir);
+  // std::cout << "save" << std::endl;
+  // dudy.saveData(dudydir);
+  // ulap.saveData(ulapdir);
 
   // bool keepOn = true;
   // int a,b;
@@ -246,7 +250,6 @@ int main(){
   //     keepOn = false;
   //   }
   // }
-
 
 	return 0;
 }

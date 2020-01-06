@@ -35,14 +35,6 @@ void Matrix::print_matrix(void) const {
   }
 }
 
-void Matrix::fill_matrix(void){
-  for (int i = 0; i < this->m; i++){
-    for (int j = 0; j < this->n; j++){
-      this->A[i + j*this->m] = i + j*this->m;
-    }
-  }
-}
-
 void Matrix::saveData(std::string out_dir) {
 
 	//names of files to be saved
@@ -50,27 +42,8 @@ void Matrix::saveData(std::string out_dir) {
 	//save x-coordinate file
 	FILE *fp_vals;
 	fp_vals =fopen(vals_outname.c_str(),"wb");
+  std::cout << this->m << " " << this->n << std::endl;
 	fwrite(this->A,sizeof(double),this->m*this->n,fp_vals);
 	fclose(fp_vals);
+
 }
-
-
-//int main(){
-//  Matrix M(3,4);
-//  int a = 3;
-//  double b = 2.1;
-//  M.print_matrix();
-//  M.fill_matrix();
-//  std::cout << "\n";
-//  M.print_matrix();
-//  std::cout << "\n";
-//  Matrix M2 = M + M;
-//  std::cout << "\n";
-//  M2(1,0) = 42;
-//  M2.print_matrix();
-//  M2 = M2 * a;
-//  M2.print_matrix();
-//  std::cout << M(0,1) << " " << M(1,1) << std::endl;
-//  std::cout << M(0,1) << " " << M(0,2) << std::endl;
-//
-//}

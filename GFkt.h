@@ -17,17 +17,28 @@ private:
 
 public:
 
-  GFkt(std::shared_ptr<Domain> grid_) :
-    u(grid_->xsize(),grid_->ysize()),
-    grid(grid_) {setDelta();}
+  ~GFkt(){};
 
-  GFkt(const GFkt& U) : u(U.u), grid(U.grid) {setDelta();}
+  GFkt(std::shared_ptr<Domain> grid_) :
+    u(grid_->xsize(),
+      grid_->ysize()),
+    grid(grid_) {
+
+    std::cout << "Construct from domain" << std::endl;
+    setDelta();
+  }
+
+  GFkt(const GFkt& U) : u(U.u), grid(U.grid) {
+    std::cout << "Construct from GFkt" << std::endl;
+    setDelta();
+  }
 
   void setDelta(void){
     this->dxh = 1.0 / ((double)this->grid->xsize() -1.0);
     this->dyh = 1.0 / ((double)this->grid->ysize() -1.0);
   }
 
+  GFkt& operator=(const GFkt& U);
   GFkt operator+(const GFkt& U) const;
   GFkt operator-(const GFkt& U) const;
   GFkt operator*(const GFkt& U) const;
@@ -36,8 +47,6 @@ public:
   GFkt operator+(const double& x) const;
   GFkt operator-(const double& x) const;
   GFkt operator/(const double& x) const;
-
-  //virtual double fun(double x, double y) const;
 
   GFkt error() const {
     std::cout << "ERROR : Cannot use grid";

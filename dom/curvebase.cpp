@@ -114,7 +114,6 @@ double Curvebase::solve(double s) {
 	double p = s*(pmax - pmin); 
 	double p_new;
 	double eps = 1e-8;
-	double lower;
 
 	int n_iter = 0;
 	const int maxiter = 1e7;

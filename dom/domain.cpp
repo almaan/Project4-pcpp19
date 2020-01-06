@@ -13,7 +13,8 @@
 Domain::Domain(){};
 
 //default destructor
-Domain::~Domain(){};
+Domain::~Domain(){
+};
 
 //copy constructor
 //all private variables including grid will be copied
@@ -81,7 +82,7 @@ Domain::Domain(Curvebase& s1,
 
 	//reset grid parameters
 	m_ = n_ = 0;
-	x_, y_ = nullptr;
+	x_ = y_ = nullptr;
 
 };
 
@@ -271,10 +272,10 @@ int Domain::npoints(void) const{
   return this->n_points;
 }
 
-//function that generating two .bin files in a directory res
-//x-coordinate vector and y-coordinates vector of grid
-//if user_input is set to true the user will be asked
-//to provide a suffix to be used for the file name
+// function that generating two .bin files in a directory res
+// x-coordinate vector and y-coordinates vector of grid
+// if user_input is set to true the user will be asked
+// to provide a suffix to be used for the file name
 
 void Domain::saveCoordinates(std::string out_dir) {
 

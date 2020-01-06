@@ -177,8 +177,9 @@ GFkt GFkt::D0x() const {
 
     double J;
     Point<double> dX,dY;
-
-    GFkt tmp(this->grid);
+    std::cout << "Please construct from grid" << std::endl;
+    GFkt tmp(*this);
+    std::cout << "Finished request" << std::endl;
     for (int i = 0; i < this->grid->xsize(); i++){
       for (int j = 0; j < this->grid->ysize(); j++){
 
@@ -253,20 +254,10 @@ void GFkt::printMat(void) const {
   this->u.print_matrix();
 }
 
-//double GFkt::fun(double x, double y){
-//  return sin(pow(x/10,2))*cos(x/10)+ y;
-//}
-
-// double GFkt::fun(double x, double y){
-//   return x*x + 3.0*y*x + x/2.0;
-// }
-
-
 void GFkt::fillMat(double fun(double,double)) {
   Point<double> P;
   for (int i = 0; i <= this->grid->xsize(); i++){
     for (int j = 0; j <= this->grid->ysize(); j++){
-
       P = (*grid)(i,j);
       this->u(i,j) = fun(P.getX(),P.getY());
     }
@@ -281,9 +272,19 @@ double GFkt::getFuncVal(int i, int j) const{
 }
 
 void GFkt::saveData(std::string out_dir){
-
+  std::cout << "Entered SaveData" << std::endl;
   this->u.saveData(out_dir);
+  std::cout << "-->save mat" << std::endl;
   this->grid->saveCoordinates(out_dir);
+  std::cout << "-->save crd" << std::endl;
+
+}
+
+GFkt& GFkt::operator=(const GFkt& U){
+  std::cout << "GFkt assignment operator" << std::endl;
+  this->grid = U.grid;
+  this->u = U.u;
+  return *this;
 }
 
 

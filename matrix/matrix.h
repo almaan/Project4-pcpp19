@@ -3,28 +3,40 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
 class Matrix {
   int m, n; 
-  double *A;
+  double * A;
 public:
 
-  Matrix(int m_ = 0, int n_ = 0) : m(m_), n(n_), A(nullptr) {
+  Matrix(int m_, int n_) : m(m_), n(n_),A(nullptr) {
+    std::cout << "Construct Matrix from dims" << std::endl;
     if (m*n > 0) {
-      A = new double[m*n];
-      std::fill(A,A+m*n,0.0);
+      A = new double[(m+1)*(n+1)];
+      std::fill(A,A+(m+1)*(n+1),0.0);
+      std::cout << "--> Filled matrix" << std::endl;
     }
   }
-  ~Matrix() { if (A != nullptr) delete [] A; }
+
+  Matrix(){};
+
+  ~Matrix() { if (A != nullptr) delete [] A; A = nullptr; }
+
   double& operator()(int i, int j) { return A[i+j*m]; }
 
   const double operator()(int i, int j) const { return A[i+j*m]; }
 
-  Matrix(const Matrix& B) : m(B.m) , n(B.n) , A(nullptr) {
-    if (n*m > 0 ) {
-      A = new double[n*m];
-      std::copy(B.A,B.A+m*n,A);
-    }
+  Matrix(const Matrix & B) : m(B.m), n(B.n), A(nullptr) {
+    std::cout << "construct from Matrix" << std::endl;
+    if (m*n > 0 ) {
+      std::cout << "--> A : " << A <<  std::endl;
+      std::cout << "-->Request New A" << std::endl;
+      std::cout << "-->(m*n)" << m * n << std::endl;
+      A = new double[(m+1)*(n+1)];
+      std::cout << "-->Created New A" << std::endl;
+      std::copy(B.A,B.A+(m+1)*(n+1),A);
+      }
   }
 
   Matrix(Matrix&& B) noexcept : m(B.m) , n(B.n), A(B.A) {
@@ -33,24 +45,28 @@ public:
     B.A = nullptr;
   }
 
-  Matrix& operator=(const Matrix& B){
-    if (this != &B ) {
-      if (n*m != B.m*B.n) {
-        if (A !=nullptr) delete [] A;
-        if (B.A != nullptr) A = new double [B.m*B.n];
+  Matrix& operator=(const Matrix& B) {
+    if (this !=&B){
+      if (m*n != B.m*B.n){
+        if (A!=nullptr){delete [] A;}
+        if (B.A != nullptr){A = new double[(B.n+1)*(B.m+1)];}
       }
-      m = B.m;
-      n = B.n;
-      std::copy(B.A,B.A+m*n,A);
+      m = B.m; n = B.n;
+      std::copy(B.A,B.A+(m+1)*(n+1),A);
     }
     return *this;
   }
 
   Matrix& operator=(Matrix&& B) {
     m = B.m; n = B.n;
-    if (A != nullptr) delete [] A;
+    if (A != nullptr) {
+      delete [] A; 
+      A = nullptr;
+    }
+
     A = B.A;
     B.m = B.n = 0;
+    delete [] B.A;
     B.A = nullptr;
     return *this;
   }

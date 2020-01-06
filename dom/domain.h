@@ -13,7 +13,7 @@ class Domain {
 private:
     std::shared_ptr<Curvebase> sides[4]; //Holder for boundary curves
 		double *x_, *y_; //arrays for coordinate vectors, pointers for Dynamic Memory Allocation 
-		int m_, n_; //number of intervals in vertical (m) and horizontal (n) direction
+    int m_, n_ ; //number of intervals in vertical (m) and horizontal (n) direction
 		int n_points; //total number of points
 
 		double xmap(double r, double s);//x-coordinate mapping from unit square do domain
