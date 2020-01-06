@@ -1,0 +1,30 @@
+# analysis spec
+
+partial_x:
+  x : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/partial_x/x_vec.bin"
+  y : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/partial_x/y_vec.bin"
+  vals : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/partial_x/values.bin"
+  fun : 'partial_x'
+  odir : '/tmp'
+
+partial_y:
+ x : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/partial_y/x_vec.bin"
+ y : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/partial_y/y_vec.bin"
+ vals : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/partial_y/values.bin"
+ fun : 'partial_y'
+ odir : '/tmp'
+
+laplacian:
+ x : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/laplacian/x_vec.bin"
+ y : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/laplacian/y_vec.bin"
+ vals : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/laplacian/values.bin"
+ fun : 'laplacian'
+ odir : '/tmp'
+
+ufun:
+ x : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/ufun/x_vec.bin"
+ y : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/ufun/y_vec.bin"
+ vals : "/home/alma/Documents/PhD/courses/FSF3565/proj4/res/ufun/values.bin"
+ fun : 'fun'
+ odir : '/tmp'
+

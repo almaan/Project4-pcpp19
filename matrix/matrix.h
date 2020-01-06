@@ -2,6 +2,7 @@
 #define _MATRIX
 
 #include <iostream>
+#include <string>
 
 class Matrix {
   int m, n; 
@@ -16,6 +17,7 @@ public:
   }
   ~Matrix() { if (A != nullptr) delete [] A; }
   double& operator()(int i, int j) { return A[i+j*m]; }
+
   const double operator()(int i, int j) const { return A[i+j*m]; }
 
   Matrix(const Matrix& B) : m(B.m) , n(B.n) , A(nullptr) {
@@ -151,6 +153,8 @@ public:
 
   void print_matrix(void) const;
   void fill_matrix(void);
+
+  void saveData(std::string out_dir = (std::string)"/tmp");
 
 };
 

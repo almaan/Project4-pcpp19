@@ -44,7 +44,7 @@ public:
 		void doLowerResolve(bool a);//will increase resolution of lower boundary if true
 
 		void printCoordinates(void);//print the coordinates as comma separated tuples
-		void saveCoordinates(bool user_input);//save coordinates.
+    void saveCoordinates(std::string out_dir = (std::string)"/tmp");//save coordinates.
 
     int xsize(void) const; 
     int ysize(void) const; 

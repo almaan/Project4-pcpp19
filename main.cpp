@@ -144,6 +144,10 @@ double BottomBorder::yfuncd(double p){
 
 };
 
+double ufun(double x, double y){
+  return(sin(x*x/100)*cos(x/10) + y);
+}
+
 //main program
 int main(){
 
@@ -176,57 +180,73 @@ int main(){
 	topb.printInfo();
 
 	std::cout << "\n" << std::endl;
-	std::cout << "using above defined boundary curves to generate domain Omega" << std::endl;
+	std::cout << "boundary curves defined above to generate domain Omega" << std::endl;
 
 	Domain omega(botb,topb,rightb,leftb);
 
-	int n_rows = 50;
-	int n_cols = 20;
+	int n_rows = 12;
+	int n_cols = 7;
 
 	omega.make_grid(n_rows, n_cols);
 
-  Matrix M(n_rows,n_cols);
+  Matrix M(omega.xsize(),omega.ysize());
 
   GFkt gf(std::make_shared<Domain>(omega));
-  gf.fillMat();
-  gf.printMat();
+  gf.fillMat(ufun);
 
-  GFkt dgf(gf);
-  GFkt dgy(gf);
+  GFkt dudx(gf);
+  std::cout << "here0.8" << std::endl;
+  GFkt dudy(gf);
+  GFkt ulap(gf);
 
-  dgf = gf.D0x();
-  dgy = gf.D0y();
+  std::cout << "here1" << std::endl;
 
-  bool keepOn = true;
-  int a,b;
-  char ans;
+  dudx = gf.D0x();
+  dudy = gf.D0y();
+  ulap = gf.del();
 
-  while (keepOn) {
-    std::cout << "x >> ";
-    std::cin >> a;
-    std::cout << "y >> ";
-    std::cin >> b;
+  std::string ufundir = "res/ufun";
+  std::string dudxdir = "res/partial_x";
+  std::string dudydir = "res/partial_y";
+  std::string ulapdir = "res/laplacian";
 
-    double val = dgf.getFuncVal(a,b);
-    Point<double> P = dgf.getGridVal(a,b);
+  gf.saveData(ufundir);
+  dudx.saveData(dudxdir);
+  dudy.saveData(dudydir);
+  ulap.saveData(ulapdir);
+  //  ulap.saveData("res/laplacian");
 
-    double valy = dgy.getFuncVal(a,b);
-    Point<double> Py = dgy.getGridVal(a,b);
+  // bool keepOn = true;
+  // int a,b;
+  // char ans;
 
-    std::cout << "Derivative" << std::endl;
-    std::cout << "x :: crd: " << P << " | e-val : " << val;
-    std::cout << " | t-val : " << P.getX()*2 + 3*P.getY() + 0.5 << std::endl;
+  // while (keepOn) {
+  //   std::cout << "x >> ";
+  //   std::cin >> a;
+  //   std::cout << "y >> ";
+  //   std::cin >> b;
 
-    std::cout << "y :: crd: " << Py << " | e-val : " << valy;
-    std::cout << " | t-val : " << 3.0*Py.getX() << std::endl;
+  //   double val = dgf.getFuncVal(a,b);
+  //   Point<double> P = dgf.getGridVal(a,b);
 
-    std::cout << "continue (y/n) >> ";
-    std::cin >> ans;
+  //   double valy = dgy.getFuncVal(a,b);
+  //   Point<double> Py = dgy.getGridVal(a,b);
 
-    if (ans != 'y'){
-      keepOn = false;
-    }
-  }
+  //   std::cout << "Derivative" << std::endl;
+  //   std::cout << "x :: crd: " << P << " | e-val : " << val;
+  //   std::cout << " | t-val : " << P.getX()*2 + 3*P.getY() + 0.5 << std::endl;
+
+  //   std::cout << "y :: crd: " << Py << " | e-val : " << valy;
+  //   std::cout << " | t-val : " << 3.0*Py.getX() << std::endl;
+
+  //   std::cout << "continue (y/n) >> ";
+  //   std::cin >> ans;
+
+  //   if (ans != 'y'){
+  //     keepOn = false;
+  //   }
+  // }
+
 
 	return 0;
 }

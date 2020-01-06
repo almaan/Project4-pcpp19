@@ -7,7 +7,7 @@
 Curvebase::Curvebase(double p_min,
 					 double p_max,
 					 bool dir,
-					 long double tolerance) {
+					 double tolerance) {
 
 	pmin = p_min;
 	pmax = p_max;
@@ -43,28 +43,16 @@ double Curvebase::integrate(double p, double lower){
 	double errest;
 	double integral1, integral2;
 
-  int nana;
-
-  //std::cin >> nana;
-  //std::cout << std::endl;
 	
 	integral1 = I1(lower,p);
 	integral2 = I2(lower,p);
 
-  // std::cout << "pmax: " << p << std::endl; 
-  // std::cout << "pmin: " << lower << std::endl; 
-  // std::cout << "I1 : " << integral1 << std::endl;
-  // std::cout << "I2 : " << integral2 << std::endl;
 
 	//estimate error in approximation
 	errest = fabs(integral1 - integral2);  
 
 	//refine interval until error below threshold
 	if (errest < 15.0 * tol) {
-    // DEBUG
-    //    if (errest > 0) {
-    //      std::cout << errest << std::endl;
-    //    }
 		return integral2;
 	} else {
     return (integrate((lower+p)*0.5, lower) + integrate(p,(lower+p)*0.5));
@@ -129,7 +117,7 @@ double Curvebase::solve(double s) {
 	double lower;
 
 	int n_iter = 0;
-	const int maxiter = 1e6;
+	const int maxiter = 1e7;
 
 	//iterate untill error is below tolerance or
 	//100 iterations have been performed

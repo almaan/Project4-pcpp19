@@ -1,5 +1,7 @@
 #include <iostream>
+#include <string>
 #include "matrix.h"
+
 
 Matrix operator*(double &b, const Matrix& B){
   Matrix C = Matrix(B.m,B.n);
@@ -35,10 +37,21 @@ void Matrix::print_matrix(void) const {
 
 void Matrix::fill_matrix(void){
   for (int i = 0; i < this->m; i++){
-    for (int j = 0; j <this->n; j++){
+    for (int j = 0; j < this->n; j++){
       this->A[i + j*this->m] = i + j*this->m;
     }
   }
+}
+
+void Matrix::saveData(std::string out_dir) {
+
+	//names of files to be saved
+	std::string vals_outname = out_dir + "/values.bin";
+	//save x-coordinate file
+	FILE *fp_vals;
+	fp_vals =fopen(vals_outname.c_str(),"wb");
+	fwrite(this->A,sizeof(double),this->m*this->n,fp_vals);
+	fclose(fp_vals);
 }
 
 

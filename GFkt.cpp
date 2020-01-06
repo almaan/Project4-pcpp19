@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <cmath>
+#include <string>
 
 #include "GFkt.h"
 #include "matrix/matrix.h"
@@ -119,7 +120,6 @@ Point<double> GFkt::dxd( int i, int j) const {
 
   Point<double> D;
   if ((i > 0) && (i < grid->xsize()-1)){
-
     Point<double> Dp1 = (*grid)(i+1,j);
     Point<double> Dm1 = (*grid)(i-1,j);
     D = (Dp1 - Dm1);
@@ -179,8 +179,8 @@ GFkt GFkt::D0x() const {
     Point<double> dX,dY;
 
     GFkt tmp(this->grid);
-    for (int i = 0; i <= this->grid->xsize(); i++){
-      for (int j = 0; j <= this->grid->ysize(); j++){
+    for (int i = 0; i < this->grid->xsize(); i++){
+      for (int j = 0; j < this->grid->ysize(); j++){
 
         dX = this->dxd(i,j);
         dY = this->dyd(i,j);
@@ -213,8 +213,8 @@ GFkt GFkt::D0y() const {
     Point<double> dX,dY;
 
     GFkt tmp(this->grid);
-    for (int i = 0; i <= this->grid->xsize(); i++){
-      for (int j = 0; j <= this->grid->ysize(); j++){
+    for (int i = 0; i < this->grid->xsize(); i++){
+      for (int j = 0; j < this->grid->ysize(); j++){
 
         dX = this->dxd(i,j);
         dY = this->dyd(i,j);
@@ -257,12 +257,12 @@ void GFkt::printMat(void) const {
 //  return sin(pow(x/10,2))*cos(x/10)+ y;
 //}
 
-double GFkt::fun(double x, double y){
-  return x*x + 3.0*y*x + x/2.0;
-}
+// double GFkt::fun(double x, double y){
+//   return x*x + 3.0*y*x + x/2.0;
+// }
 
 
-void GFkt::fillMat(void) {
+void GFkt::fillMat(double fun(double,double)) {
   Point<double> P;
   for (int i = 0; i <= this->grid->xsize(); i++){
     for (int j = 0; j <= this->grid->ysize(); j++){
@@ -278,6 +278,12 @@ Point<double> GFkt::getGridVal(int i, int j) const{
 }
 double GFkt::getFuncVal(int i, int j) const{
   return this->u(i,j);
+}
+
+void GFkt::saveData(std::string out_dir){
+
+  this->u.saveData(out_dir);
+  this->grid->saveCoordinates(out_dir);
 }
 
 

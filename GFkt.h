@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "matrix/matrix.h"
 #include "dom/domain.h"
@@ -17,7 +18,7 @@ private:
 public:
 
   GFkt(std::shared_ptr<Domain> grid_) :
-    u(grid_->xsize()+1,grid_->ysize()+1),
+    u(grid_->xsize(),grid_->ysize()),
     grid(grid_) {setDelta();}
 
   GFkt(const GFkt& U) : u(U.u), grid(U.grid) {setDelta();}
@@ -52,13 +53,13 @@ public:
   GFkt D0y() const;
   GFkt del() const;
   void printMat(void) const;
-  void fillMat(void);
-  double fun (double x, double y);
+  void fillMat(double fun(double,double));
 
   Point<double> getGridVal(int i, int j) const;
   double getFuncVal(int i, int j) const;
 
-};
+  void saveData(std::string out_dir = (std::string)"/tmp");
 
+};
 
 #endif

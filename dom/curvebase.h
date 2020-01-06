@@ -33,7 +33,7 @@ public:
 	Curvebase(double p_min,
 			  double p_max,
 			  bool dir = true,
-	 		  long double tolerance = 1e-4);
+	 		  double tolerance = 1e-6);
 
 	Curvebase(); //constructor
 	~Curvebase(); //destructor

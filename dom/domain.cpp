@@ -275,20 +275,12 @@ int Domain::npoints(void) const{
 //x-coordinate vector and y-coordinates vector of grid
 //if user_input is set to true the user will be asked
 //to provide a suffix to be used for the file name
-void Domain::saveCoordinates(bool user_input = false) {
-	std::string outname;
 
-	//catch user specified name
-	if (user_input){
-			std::cout << "Enter suffix of file to save coordinates to >> ";
-			std::cin >> outname;
-	} else {
-		outname = "generated_grid.bin";
-	}
+void Domain::saveCoordinates(std::string out_dir) {
 
 	//names of files to be saved
-	std::string x_outname = "../res/x_vec_" + outname;
-	std::string y_outname = "../res/y_vec_" + outname;
+	std::string x_outname = out_dir + "/x_vec.bin";
+	std::string y_outname = out_dir + "/y_vec.bin";
 
 	//save x-coordinate file
 	FILE *fp_x;
@@ -302,7 +294,7 @@ void Domain::saveCoordinates(bool user_input = false) {
 	fwrite(y_,sizeof(double),m_*n_,fp_y);
 	fclose(fp_y);
 
-};
+}
 
 bool Domain::grid_valid(void) const {
   return this->m_*this->n_ > 0;
