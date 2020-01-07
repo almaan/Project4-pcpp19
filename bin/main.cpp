@@ -232,10 +232,10 @@ int main(){
   // *--- Save Results ---*
 
   //paths to save restults to
-  std::string ufundir = "res/ufun";
-  std::string dudxdir = "res/partial_x";
-  std::string dudydir = "res/partial_y";
-  std::string ulapdir = "res/laplacian";
+  std::string ufundir = "../res/ufun";
+  std::string dudxdir = "../res/partial_x";
+  std::string dudydir = "../res/partial_y";
+  std::string ulapdir = "../res/laplacian";
 
   // write to files
   gf.saveData(ufundir);
