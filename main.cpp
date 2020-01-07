@@ -186,10 +186,22 @@ int main(){
 	std::cout << "\n" << std::endl;
 	std::cout << "boundary curves defined above to generate domain Omega" << std::endl;
 
-  Domain omega(botb,topb,rightb,leftb);
+  std::shared_ptr<Curvebase>bottom = std::make_shared<BottomBorder>(botb);
+  std::shared_ptr<Curvebase>top = std::make_shared<TopBorder>(topb);
+  std::shared_ptr<Curvebase>left = std::make_shared<LeftRightBorder>( leftb );
+  std::shared_ptr<Curvebase>right = std::make_shared<LeftRightBorder>( rightb );
+
+  Domain omega(bottom, top, right,left);
+  // Domain omega(botb,topb,rightb,leftb);
+  // Domain omega(std::shared_ptr<Curvebase> botb ,
+  //              std::shared_ptr<Curvebase> topb ,
+  //              std::shared_ptr<Curvebase> rightb ,
+  //              std::shared_ptr<Curvebase> leftb );
+
 
   int n_rows;
 	int n_cols;
+
   std::cout << "ncols : ";
   std::cin >> n_cols;
   std::cout << "nrows : ";

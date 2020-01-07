@@ -55,10 +55,10 @@ Domain & Domain::operator=(const Domain &d) {
 //constructor taking four boundary curves
 //representing the four sides of the domain
 //boundary curves can be passed in any arbitrary order
-Domain::Domain(Curvebase& s1,
-               Curvebase& s2,
-               Curvebase& s3,
-               Curvebase& s4) : m_(0), n_(0), x_(nullptr),y_(nullptr)
+Domain::Domain(std::shared_ptr<Curvebase> s1,
+               std::shared_ptr<Curvebase> s2,
+               std::shared_ptr<Curvebase> s3,
+               std::shared_ptr<Curvebase> s4) : m_(0), n_(0), x_(nullptr),y_(nullptr)
 {
 	
 
@@ -71,10 +71,11 @@ Domain::Domain(Curvebase& s1,
 	// sides[1] = std::shared_ptr<Curvebase>(&s2); //bottom side
   // sides[2] = std::shared_ptr<Curvebase>(&s3); //right side
 	// sides[3] = std::shared_ptr<Curvebase>(&s4); //top side
-	sides[0] = (&s1); //left side
-	sides[1] = (&s2); //bottom side
-  sides[2] = (&s3); //right side
-	sides[3] = (&s4); //top side
+
+	sides[0] = s1; //left side
+	sides[1] = s2; //bottom side
+  sides[2] = s3; //right side
+	sides[3] = s4; //top side
 
 
 
@@ -93,7 +94,7 @@ Domain::Domain(Curvebase& s1,
 // std::shared_ptr<Curvebase>  Domain::getSide(int s) {
 // 	return sides[s];
 // };
-Curvebase * Domain::getSide(int s) {
+std::shared_ptr<Curvebase> Domain::getSide(int s) {
 	return sides[s];
 };
 
