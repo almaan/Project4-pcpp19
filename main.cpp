@@ -5,16 +5,20 @@
 #include <cstdio>
 #include <string>
 #include <memory>
+
 #include "dom/hline.h"
 #include "dom/vline.h"
 #include "dom/domain.h"
 #include "matrix/matrix.h"
-#include "GFkt.h"
+#include "gfkt/GFkt.h"
 
+
+// *--- Classes for specific borders ---*
 
 //class for left an right borders of Omega domain
 //specific case where the boundary curve
 //is a vertical straigt line segment 
+
 class LeftRightBorder : public Vertline {
 	private:
 		double x_pos; //fixed x-position
@@ -144,36 +148,50 @@ double BottomBorder::yfuncd(double p){
 
 };
 
+// *--- Helper Functions ---*
+
+// Function to analyze on grid
+// sin(x^2/100)*cos(x/10) + y
 double ufun(double x, double y){
   return(sin(x*x/100.0)*cos(x/10.0) + y);
 }
 
-//main program
+//*--- Main Program ---*
+
 int main(){
 
+  // *---Construct domain sides---*
+  // using smart pointers 
+
+  // Left side
   std::shared_ptr<LeftRightBorder> leftb( new LeftRightBorder(0.0,3.0,false));
 	leftb->setXpos(-10.0);
 	leftb->setLength();
 
-
+  // Right side
 	std::shared_ptr<LeftRightBorder> rightb(new LeftRightBorder(0.0,3.0, true));
 	rightb->setXpos(5.0);
 	rightb->setLength();
 
+  // Bottom Side
   std::shared_ptr<BottomBorder> botb( new BottomBorder(-10.0, 5.0, true));
 	botb->setLength();
 	botb->printInfo();
 
-
+  // Top Side
   std::shared_ptr<TopBorder> topb(new TopBorder(-10.0, 5.0, false));
 	topb->setYpos(3.0);
 	topb->setLength();
 
+  // Generate Domain from given sides
   std::shared_ptr<Domain> omega(new Domain(botb,topb,rightb,leftb));
 
+  // *--- Generate Grid on Domain ---*
   int n_rows;
 	int n_cols;
 
+  // Let user specify number of points by
+  // giving rows and cols
   std::cout << "[Enter] nrows : ";
   std::cin >> n_rows;
 
@@ -183,24 +201,43 @@ int main(){
   omega->doLowerResolve(true);
   omega->make_grid(n_rows, n_cols);
 
-  // std::shared_ptr<Domain> domptr = std::make_shared<Domain>(omega);
+  // *--- Perform computations on domain ---*
 
+  // instatiate gridfunction with domain
   GFkt gf(omega);
 
+  // Fill grid function values based on
+  // provided function
   gf.fillMat(ufun);
+
+  // Create new objects to hold results
+  // from differential operators
+
+  // For partial_x
   GFkt dudx(gf);
+  // For partial_y
   GFkt dudy(gf);
+  // For laplacian
   GFkt ulap(gf);
 
+  // perform computations
+
+  //d/dx
   dudx = gf.D0x();
+  //d/dy
   dudy = gf.D0y();
+  // d^2/dx^ + d^2/dy^2
   ulap = gf.del();
 
+  // *--- Save Results ---*
+
+  //paths to save restults to
   std::string ufundir = "res/ufun";
   std::string dudxdir = "res/partial_x";
   std::string dudydir = "res/partial_y";
   std::string ulapdir = "res/laplacian";
 
+  // write to files
   gf.saveData(ufundir);
   dudx.saveData(dudxdir);
   dudy.saveData(dudydir);
@@ -208,6 +245,3 @@ int main(){
 
 	return 0;
 }
-
-
-

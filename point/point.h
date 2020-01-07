@@ -17,8 +17,7 @@ public:
   Point(T x, T y) : x_(x), y_(y) {}
   ~Point() {}
 
-  Point(const Point& P) : x_(P.x_), y_(P.y_) {
-  }
+  Point(const Point& P) : x_(P.x_), y_(P.y_) {}
 
   Point& operator=(const Point& P){
     if (this == &P) {
