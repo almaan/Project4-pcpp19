@@ -49,14 +49,41 @@ def plt_fun(ax,
                s = 80,
                vmin = mnmx[0],
                vmax = mnmx[1],
-               cmap = plt.cm.magma,
+               cmap = cmap,
                )
+    ax = clr_ax(ax)
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
 
     ax.set_aspect('equal')
+
+    return ax
+
+def clr_ax(ax):
 
     for sp in ax.spines.values():
         sp.set_visible(False)
 
+    return ax
+
+
+
+def plt_hist(ax,
+             vals,
+             edgecolor = 'black',
+             facecolor = 'gray',
+             ):
+
+    ax.hist(vals,
+            edgecolor = edgecolor,
+            facecolor = facecolor,
+            )
+
+    ax = clr_ax(ax)
     return ax
 
 def plt_compare(axarr,
@@ -66,7 +93,7 @@ def plt_compare(axarr,
                 v2,
                 mnmx):
 
-    assert axarr.shape[0] == 3
+    assert axarr.shape[0] == 4
 
     axarr[0] = plt_fun(axarr[0],x,y,v1,mnmx)
     axarr[0].set_title("True Values")
@@ -74,8 +101,12 @@ def plt_compare(axarr,
     axarr[1].set_title("Approximated Values")
 
     err = errest(v1,v2)
-    axarr[2] = plt_fun(axarr[2],x,y,err,cmap = plt.cm.PuRd)
+    print(err.max())
+    axarr[2] = plt_fun(axarr[2],x,y,err,cmap = plt.cm.Reds)
     axarr[2].set_title("Error")
+
+    axarr[3] = plt_hist(axarr[3],err)
+    axarr[3].set_title('Error Distribution')
 
     return axarr
 
@@ -104,7 +135,8 @@ def main():
         mx = np.max((u_true.max(),u_aprx.max()))
         mn = np.min((u_true.min(),u_aprx.min()))
 
-        fig,axr = plt.subplots(1,3,figsize=(5*3 + 0.2,2))
+        fig,axr = plt.subplots(2,2,figsize=(5*2 + 0.2,4 + 0.2))
+        axr = axr.flatten()
 
         axr = plt_compare(axr,
                         x,

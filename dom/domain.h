@@ -11,7 +11,8 @@
 class Domain {
 
 private:
-    std::shared_ptr<Curvebase> sides[4]; //Holder for boundary curves
+    // std::shared_ptr<Curvebase> sides[4]; //Holder for boundary curves
+    Curvebase * sides[4];
 		double *x_, *y_; //arrays for coordinate vectors, pointers for Dynamic Memory Allocation 
     int m_, n_ ; //number of intervals in vertical (m) and horizontal (n) direction
 		int n_points; //total number of points
@@ -34,12 +35,18 @@ public:
 		Domain(const Domain &d); //copy  constructor
 		Domain& operator=(const Domain &d); //assignment operator overloading
     const Point<double> operator()(int i, int j) const;
-		~Domain(); //default destructor
+    ~Domain() {
+          delete [] x_;
+          delete [] y_;
+          x_ = y_ = nullptr;
+    }
+
 
 		void check_consistency(void);//assign proper side-identity to boundary curves
 		void make_grid (int m, int n);//make a mxn-grid over the domain. Will remove old grid.
 
-    std::shared_ptr<Curvebase> getSide(int s);//reuturns the boundary curve of provided identity
+    // std::shared_ptr<Curvebase> getSide(int s);//reuturns the boundary curve of provided identity
+    Curvebase * getSide(int s);
 		double sigmaT(double s);//distribution of y-coordinates when refinement is used
 		void doLowerResolve(bool a);//will increase resolution of lower boundary if true
 

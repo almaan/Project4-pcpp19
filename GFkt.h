@@ -12,14 +12,14 @@ class GFkt {
 
 private:
   Matrix u;
-  std::shared_ptr<Domain> grid;
+  Domain * grid;
   double dxh, dyh;
 
 public:
 
   ~GFkt(){};
 
-  GFkt(std::shared_ptr<Domain> grid_) :
+  GFkt( Domain * grid_) :
     u(grid_->xsize(),
       grid_->ysize()),
     grid(grid_) {

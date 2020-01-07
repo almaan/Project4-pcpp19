@@ -145,8 +145,12 @@ double BottomBorder::yfuncd(double p){
 };
 
 double ufun(double x, double y){
-  return(sin(x*x/100)*cos(x/10) + y);
+  return(sin(x*x/100.0)*cos(x/10.0) + y);
 }
+// double ufun(double x, double y){
+//   return(x*x +3*y);
+// }
+
 
 //main program
 int main(){
@@ -184,72 +188,42 @@ int main(){
 
   Domain omega(botb,topb,rightb,leftb);
 
-	int n_rows = 100;
-	int n_cols = 200;
+  int n_rows;
+	int n_cols;
+  std::cout << "ncols : ";
+  std::cin >> n_cols;
+  std::cout << "nrows : ";
+  std::cin >> n_rows;
 
+
+  omega.doLowerResolve(true);
   omega.make_grid(n_rows, n_cols);
 
-  GFkt gf(std::make_shared<Domain>(omega));
+  GFkt gf(&omega);
 
   gf.fillMat(ufun);
   std::cout << "here0" << std::endl;
-  // GFkt dudx(gf);
+  GFkt dudx(gf);
+  GFkt dudy(gf);
+  GFkt ulap(gf);
+
   std::cout << "here0.8" << std::endl;
-  // GFkt dudy(gf.D0y());
-  // GFkt ulap(gf.del());
-  // dudx = gf.D0x();
+  dudx = gf.D0x();
+  dudy = gf.D0y();
+  ulap = gf.del();
 
-  std::cout << "here1" << std::endl;
-  // std::cout << "uno" << std::endl;
-  // dudy = gf.D0y();
-  // std::cout << "dos" << std::endl;
-  // ulap = gf.del();
-  // std::cout << "tres" << std::endl;
-
-
-  // std::string ufundir = "res/ufun";
+  std::string ufundir = "res/ufun";
   std::string dudxdir = "res/partial_x";
   std::cout << "set oname" << std::endl;
 
-  // std::string dudydir = "res/partial_y";
-  // std::string ulapdir = "res/laplacian";
+  std::string dudydir = "res/partial_y";
+  std::string ulapdir = "res/laplacian";
 
-  // gf.saveData(ufundir);
-  // dudx.saveData(dudxdir);
-  // std::cout << "save" << std::endl;
-  // dudy.saveData(dudydir);
-  // ulap.saveData(ulapdir);
-
-  // bool keepOn = true;
-  // int a,b;
-  // char ans;
-
-  // while (keepOn) {
-  //   std::cout << "x >> ";
-  //   std::cin >> a;
-  //   std::cout << "y >> ";
-  //   std::cin >> b;
-
-  //   double val = dgf.getFuncVal(a,b);
-  //   Point<double> P = dgf.getGridVal(a,b);
-
-  //   double valy = dgy.getFuncVal(a,b);
-  //   Point<double> Py = dgy.getGridVal(a,b);
-
-  //   std::cout << "Derivative" << std::endl;
-  //   std::cout << "x :: crd: " << P << " | e-val : " << val;
-  //   std::cout << " | t-val : " << P.getX()*2 + 3*P.getY() + 0.5 << std::endl;
-
-  //   std::cout << "y :: crd: " << Py << " | e-val : " << valy;
-  //   std::cout << " | t-val : " << 3.0*Py.getX() << std::endl;
-
-  //   std::cout << "continue (y/n) >> ";
-  //   std::cin >> ans;
-
-  //   if (ans != 'y'){
-  //     keepOn = false;
-  //   }
-  // }
+  gf.saveData(ufundir);
+  dudx.saveData(dudxdir);
+  std::cout << "save" << std::endl;
+  dudy.saveData(dudydir);
+  ulap.saveData(ulapdir);
 
 	return 0;
 }

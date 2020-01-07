@@ -10,8 +10,8 @@
 
 GFkt GFkt::operator+(const GFkt& U) const {
   if (grid == U.grid) { // defined on the same grid?
-    GFkt tmp(grid);
-    tmp.u = u+U.u; 
+    GFkt tmp(*this);
+    tmp.u += U.u; 
     return tmp;
   } else {return error();};
 }
@@ -28,8 +28,8 @@ GFkt GFkt::operator-(const GFkt& U) const {
 GFkt GFkt::operator*(const GFkt& U) const {
   if (grid == U.grid) { 
     GFkt tmp(grid);
-    for (int j = 0; j <= grid->ysize(); j++) {
-      for (int i = 0; i <= grid->xsize(); i++){
+    for (int j = 0; j < grid->ysize(); j++) {
+      for (int i = 0; i < grid->xsize(); i++){
         tmp.u(i,j) = u(i,j)*U.u(i,j);
       }
     }
@@ -41,8 +41,8 @@ GFkt GFkt::operator*(const GFkt& U) const {
 GFkt GFkt::operator/(const GFkt& U) const {
   if (grid == U.grid) { 
     GFkt tmp(grid);
-    for (int j = 0; j <= grid->ysize(); j++) {
-      for (int i = 0; i <= grid->xsize(); i++){
+    for (int j = 0; j < grid->ysize(); j++) {
+      for (int i = 0; i < grid->xsize(); i++){
         tmp.u(i,j) = u(i,j)/U.u(i,j);
       }
     }
@@ -86,12 +86,12 @@ double GFkt::dudxh(int i, int j) const {
   else if (i == 0)
   {
     diff = 3*this->u(i,j) - 4*this->u(i+1,j) + this->u(i+2,j);
-    return diff / (3.0 * this->dxh);
+    return diff / (2.0 * this->dxh);
   }
   else
   {
-    diff = this->u(i-2,j) - 4*this->u(i-1,j) + 3 * this->u(i,j);
-    return diff / (3.0 * this->dxh);
+    diff = -this->u(i-2,j) + 4*this->u(i-1,j) - 3 * this->u(i,j);
+    return diff / (2.0 * this->dxh);
   }
 }
 
@@ -104,12 +104,12 @@ double GFkt::dudyh(int i, int j) const {
   else if (j == 0)
     {
       diff = 3*this->u(i,j) - 4*this->u(i,j+1) + this->u(i,j+2);
-      return diff / (3.0 * this->dyh);
+      return diff / (2.0 * this->dyh);
     }
   else
     {
-      diff = this->u(i,j-2) - 4*this->u(i,j-1) + 3 * this->u(i,j);
-      return diff / (3.0 * this->dyh);
+      diff = -this->u(i,j-2) + 4*this->u(i,j-1) - 3 * this->u(i,j);
+      return diff / (2.0 * this->dyh);
     }
 }
 
@@ -123,19 +123,19 @@ Point<double> GFkt::dxd( int i, int j) const {
     Point<double> Dp1 = (*grid)(i+1,j);
     Point<double> Dm1 = (*grid)(i-1,j);
     D = (Dp1 - Dm1);
-    D *= 0.5 * (1.0 / dxh);
+    D *= ( 0.5 * (1.0 / this->dxh));
   }
   else if (i == 0)
   {
     Point<double> D0,Dp1,Dp2;
     D0 = (*grid)(i,j); Dp1 = (*grid)(i+1,j); Dp2 = (*grid)(i+2,j);
-    D = D0*3 - Dp1*4 + Dp2;
-    D *= (1.0 / 3 / this->dxh);
+    D = D0*3.0 - Dp1*4.0 + Dp2;
+    D *= (1.0  /  (2.0 * this->dxh));
   } else {
     Point<double> D0,Dm1,Dm2;
     D0 = (*grid)(i,j); Dm1 = (*grid)(i-1,j); Dm2 = (*grid)(i-2,j);
-    D = D0*3 - Dm1*4 + Dm2;
-    D *= (1.0 / 3 / this->dxh);
+    D = D0*(-3.0) + Dm1*4.0 - Dm2;
+    D *= (1.0 / (2.0 * this->dxh));
   }
   return D;
 }
@@ -151,19 +151,19 @@ Point<double> GFkt::dyd( int i, int j) const {
     Point<double> Dp1 = (*grid)(i,j+1);
     Point<double> Dm1 = (*grid)(i,j-1);
     D = (Dp1 - Dm1);
-    D *= 0.5* (1.0 / dyh);
+    D *= (0.5* (1.0 / this->dyh));
   }
   else if (j == 0)
     {
       Point<double> D0,Dp1,Dp2;
       D0 = (*grid)(i,j); Dp1 = (*grid)(i,j+1); Dp2 = (*grid)(i,j+1);
-      D = D0*3 - Dp1*4 + Dp2;
-      D *= (1.0 / 3 / this->dyh);
+      D = D0*3.0 - Dp1*4.0 + Dp2;
+      D *= (1.0 / (2 * this->dyh));
     } else {
     Point<double> D0,Dm1,Dm2;
     D0 = (*grid)(i,j); Dm1 = (*grid)(i,j-1); Dm2 = (*grid)(i,j-2);
-    D = D0*3 - Dm1*4 + Dm2;
-    D *= (1.0 / 3 / this->dyh);
+    D = D0*(-3.0) + Dm1*4.0 - Dm2;
+    D *= (1.0 / (2.0 * this->dyh));
    
   }
   return D;
@@ -177,9 +177,7 @@ GFkt GFkt::D0x() const {
 
     double J;
     Point<double> dX,dY;
-    std::cout << "Please construct from grid" << std::endl;
-    GFkt tmp(*this);
-    std::cout << "Finished request" << std::endl;
+    GFkt tmp(this->grid);
     for (int i = 0; i < this->grid->xsize(); i++){
       for (int j = 0; j < this->grid->ysize(); j++){
 
@@ -221,7 +219,7 @@ GFkt GFkt::D0y() const {
         dY = this->dyd(i,j);
 
         J = dX.getX()*dY.getY() -
-          dY.getX()*dX.getY();
+            dY.getX()*dX.getY();
 
         tmp.u(i,j) = (1.0 / J) *
           (this->dudyh(i,j) *
@@ -241,12 +239,15 @@ GFkt GFkt::D0y() const {
 
 GFkt GFkt::del(void) const {
   GFkt x_part(this->grid), y_part(this->grid);
+  GFkt del_part(this->grid);
   x_part = this->D0x();
-  x_part = x_part.D0x();
   y_part = this->D0y();
-  y_part = y_part.D0y();
 
-  return x_part + y_part;
+  x_part = x_part.D0x();
+  y_part = y_part.D0y();
+  del_part = x_part + y_part;
+
+  return del_part;
 }
 
 
@@ -256,8 +257,8 @@ void GFkt::printMat(void) const {
 
 void GFkt::fillMat(double fun(double,double)) {
   Point<double> P;
-  for (int i = 0; i <= this->grid->xsize(); i++){
-    for (int j = 0; j <= this->grid->ysize(); j++){
+  for (int i = 0; i < this->grid->xsize(); i++){
+    for (int j = 0; j < this->grid->ysize(); j++){
       P = (*grid)(i,j);
       this->u(i,j) = fun(P.getX(),P.getY());
     }

@@ -12,10 +12,6 @@
 //default constructor
 Domain::Domain(){};
 
-//default destructor
-Domain::~Domain(){
-};
-
 //copy constructor
 //all private variables including grid will be copied
 Domain::Domain(const Domain &d) {
@@ -71,10 +67,16 @@ Domain::Domain(Curvebase& s1,
 	//is 0-left 1-bottom 2-right 3-top
 	//this is adjusted after initial assignation
 
-	sides[0] = std::shared_ptr<Curvebase>(&s1); //left side
-	sides[1] = std::shared_ptr<Curvebase>(&s2); //bottom side
-  sides[2] = std::shared_ptr<Curvebase>(&s3); //right side
-	sides[3] = std::shared_ptr<Curvebase>(&s4); //top side
+	// sides[0] = std::shared_ptr<Curvebase>(&s1); //left side
+	// sides[1] = std::shared_ptr<Curvebase>(&s2); //bottom side
+  // sides[2] = std::shared_ptr<Curvebase>(&s3); //right side
+	// sides[3] = std::shared_ptr<Curvebase>(&s4); //top side
+	sides[0] = (&s1); //left side
+	sides[1] = (&s2); //bottom side
+  sides[2] = (&s3); //right side
+	sides[3] = (&s4); //top side
+
+
 
 	//adjust boundary curve positioning in sides array
 	//as to be consistent with above described convention
@@ -88,9 +90,14 @@ Domain::Domain(Curvebase& s1,
 
 //returns pointer to boudary curve of sides array
 //with the provided index "s"
-std::shared_ptr<Curvebase>  Domain::getSide(int s) {
+// std::shared_ptr<Curvebase>  Domain::getSide(int s) {
+// 	return sides[s];
+// };
+Curvebase * Domain::getSide(int s) {
 	return sides[s];
 };
+
+
 
 //x-coordinate mapping from unit square to domain
 double Domain::xmap(double r, double s) {
@@ -168,6 +175,7 @@ void Domain::make_grid(int m, int n){
 		std::cout << "Erasing old grid" << std::endl;
 		delete [] x_;
 		delete [] y_;
+    x_ = y_ = nullptr;
 	}	
 
 	m_ = m; //number of horizontal intervals in grid
@@ -181,16 +189,6 @@ void Domain::make_grid(int m, int n){
 
 	x_ = new double [n_points]; //generate array to store x-coordinates in (dynamic)
 	y_ = new double [n_points]; //generate array to store y-coordinates in (dynamic)
-
-	//algebraic grid formation
-	//for (int ii = 0; ii < m_; ii++){
-	//	for (int jj = 0; jj < n_; jj++){
-
-	//		x_[jj*m_ + ii] = xmap(dx*(double)ii, dy*(double)jj);
-	//		y_[jj*m_ + ii] = ymap(dx*(double)ii, dy*(double)jj);
-
-	//	}
-	//}
 
   for (int ii = 0; ii < m_; ii++){
 		for (int jj = 0; jj < n_; jj++){

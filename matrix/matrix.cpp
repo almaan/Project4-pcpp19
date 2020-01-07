@@ -45,5 +45,4 @@ void Matrix::saveData(std::string out_dir) {
   std::cout << this->m << " " << this->n << std::endl;
 	fwrite(this->A,sizeof(double),this->m*this->n,fp_vals);
 	fclose(fp_vals);
-
 }
