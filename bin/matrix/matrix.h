@@ -14,7 +14,8 @@ public:
   Matrix(){} // default constructur
   ~Matrix();// default 
 
-  Matrix(int m_, int n_); // constructot from dimension specificantions
+  // construct from dimension specifications
+  Matrix(int m_, int n_); 
 
   // overload () operator for accession of elements
   double& operator()(int i, int j) { return A[i+j*m]; }

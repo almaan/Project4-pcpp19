@@ -213,8 +213,7 @@ Point<double> GFkt::dyd( int i, int j) const {
     {
       Point<double> D0,Dp1,Dp2;
       D0 = (*grid)(i,j); Dp1 = (*grid)(i,j+1); Dp2 = (*grid)(i,j+2);
-      // return (D0*3.0 - Dp1*4.0 + Dp2 ) * (-0.5);
-      return (Dp1 - D0);
+      return (D0*3.0 - Dp1*4.0 + Dp2 ) * (-0.5);
 
     }
   //backward one sided difference
@@ -223,8 +222,7 @@ Point<double> GFkt::dyd( int i, int j) const {
     {
     Point<double> D0,Dm1,Dm2;
     D0 = (*grid)(i,j); Dm1 = (*grid)(i,j-1); Dm2 = (*grid)(i,j-2);
-    // return  (D0*3.0 - Dm1*4.0 + Dm2) * (0.5);
-    return (D0 - Dm1);
+    return  (D0*3.0 - Dm1*4.0 + Dm2) * (0.5);
 
    
   }

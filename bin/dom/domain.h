@@ -42,16 +42,20 @@ public:
     }
 
   // *--- Additional Methods ---*
-
-		void check_consistency(void);//assign proper side-identity to boundary curves
-		void make_grid (int m, int n);//make a mxn-grid over the domain. Will remove old grid.
-
-    std::shared_ptr<Curvebase> getSide(int s);//reuturns the boundary curve of provided identity
-		double sigmaT(double s);//distribution of y-coordinates when refinement is used
-		void doLowerResolve(bool a);//will increase resolution of lower boundary if true
-
-		void printCoordinates(void);//print the coordinates as comma separated tuples
-    void saveCoordinates(std::string out_dir = (std::string)"/tmp");//save coordinates.
+    //assign proper side-identity to boundary curves
+		void check_consistency(void);
+    //make a mxn-grid over the domain. Will remove old grid.
+		void make_grid (int m, int n);
+    //reuturns the boundary curve of provided identity
+    std::shared_ptr<Curvebase> getSide(int s);
+    //distribution of y-coordinates when refinement is used
+		double sigmaT(double s);
+    //will increase resolution of lower boundary if true
+		void doLowerResolve(bool a);
+    //print the coordinates as comma separated tuples
+		void printCoordinates(void);
+    //save coordinates.
+    void saveCoordinates(std::string out_dir = (std::string)"/tmp");
 
     int xsize(void) const; 
     int ysize(void) const; 

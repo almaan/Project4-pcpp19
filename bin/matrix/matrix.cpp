@@ -2,6 +2,7 @@
 #include <string>
 #include "matrix.h"
 
+// initialize by dimensions
 Matrix::Matrix(int m_, int n_) : m(m_), n(n_),A(nullptr) {
   if (m*n > 0) {
     A = new double[m*n];
@@ -9,24 +10,29 @@ Matrix::Matrix(int m_, int n_) : m(m_), n(n_),A(nullptr) {
   }
 }
 
+// destructor, remove dynamically allocated
+//object
 Matrix::~Matrix() {
   if (A != nullptr) {delete [] A;}
   A = nullptr;
 }
 
+// Copy constructor
 Matrix::Matrix(const Matrix & B) : m(B.m), n(B.n), A(nullptr) {
   if (m*n > 0 ) {
     A = new double[m*n];
-    std::copy(B.A,B.A+m*n,A);
+    std::copy(B.A,B.A+m*n,A); 
   }
 }
 
+// for move operation
 Matrix::Matrix(Matrix&& B) noexcept : m(B.m) , n(B.n), A(B.A) {
   B.m = 0;
   B.n = 0;
   B.A = nullptr;
 }
 
+// assignment operator
 Matrix& Matrix::operator=(const Matrix& B) {
     if (this !=&B){
       if (m*n != B.m*B.n){
@@ -39,6 +45,8 @@ Matrix& Matrix::operator=(const Matrix& B) {
     return *this;
   }
 
+// move assignment operator
+// for chaining
 Matrix& Matrix::operator=(Matrix&& B) {
     m = B.m; n = B.n;
     if (A != nullptr) {
@@ -53,6 +61,7 @@ Matrix& Matrix::operator=(Matrix&& B) {
     return *this;
   }
 
+// addition operator, Matrix-Matrix
 Matrix Matrix::operator+(const Matrix& B) const {
     Matrix C(this->m,this->n);
     int idx;
@@ -65,6 +74,7 @@ Matrix Matrix::operator+(const Matrix& B) const {
     return C;
   }
 
+// plus equal operator Matrix-Matrix
 const Matrix& Matrix::operator+=(const Matrix& B){
     int idx;
     for (int j = 0; j < this->n; j++){
@@ -76,6 +86,7 @@ const Matrix& Matrix::operator+=(const Matrix& B){
     return *this;
   }
 
+// subtraction operator Matrix-Matrix
 Matrix Matrix::operator-(const Matrix &B) const {
       int idx;
       Matrix C(this->m,this->n);
@@ -88,6 +99,7 @@ Matrix Matrix::operator-(const Matrix &B) const {
       return C;
   }
 
+// minus equal to operator Matrix-Matrix
 const Matrix& Matrix::operator-=(const Matrix& B){
     int idx;
     for (int j = 0; j < this->n; j++){
@@ -99,6 +111,7 @@ const Matrix& Matrix::operator-=(const Matrix& B){
     return *this;
   }
 
+// Multiplication operator Matrix-scalar
 Matrix Matrix::operator*(const double& b) const {
     int idx;
     Matrix C = Matrix(this->m,this->n);
@@ -111,7 +124,7 @@ Matrix Matrix::operator*(const double& b) const {
     return C;
   }
 
-
+// Addition operator Matrix-scalar
 Matrix Matrix::operator+(const double& b) const {
     int idx;
     Matrix C = Matrix(this->m,this->n);
@@ -123,7 +136,7 @@ Matrix Matrix::operator+(const double& b) const {
     }
     return C;
   }
-
+// Subtraction operator Matrix-scalar
 Matrix Matrix::operator-(const double& b) const {
     int idx;
     Matrix C = Matrix(this->m,this->n);
@@ -136,7 +149,7 @@ Matrix Matrix::operator-(const double& b) const {
     return C;
   }
 
-
+// times equal operator Matrix-scalar
 Matrix Matrix::operator*=(const double& b) const {
     for (int i = 0; i < this->m*this->n; i++){
         this->A[i]*= b;
@@ -144,7 +157,7 @@ Matrix Matrix::operator*=(const double& b) const {
     return *this;
   }
 
-
+// Multiplication operator scalar-Matrix
 Matrix operator*(double &b, const Matrix& B){
   Matrix C = Matrix(B.m,B.n);
   int idx;
@@ -157,16 +170,18 @@ Matrix operator*(double &b, const Matrix& B){
   return C;
 }
 
+// operator addition with move (for chaining)
 Matrix operator+(Matrix &&A, const Matrix& B ) {
   A += B;
   return std::move(A);
 }
-
+// operator subtraction with move (for chaining)
 Matrix operator-(Matrix &&A, const Matrix& B ) {
     A -= B;
     return std::move(A);
 }
 
+// print matrix in structured manner
 void Matrix::print_matrix(void) const {
   for (int i = 0; i < this->m; i++){
     std::cout << "[ ";
@@ -177,6 +192,7 @@ void Matrix::print_matrix(void) const {
   }
 }
 
+// write matrix to file
 void Matrix::saveData(std::string out_dir) {
 	std::string vals_outname = out_dir + "/values.bin";
 	FILE *fp_vals;

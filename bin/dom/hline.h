@@ -9,15 +9,21 @@
 class Horzline : public Curvebase {
 	protected:
 
-		double xp(double p);//x as function of parametrization variable
-		double yp(double p);//y as function of parametrization variable
-		double dxp(double p);//derivative of x as function of parametrization variable
-		double dyp(double p);//derivative of x as function of parametrization variable
-
-		virtual double yfunc(double p) = 0;//derivative of x-coordinate as function of y-coordinate
-		virtual double yfuncd(double p) = 0;//derivative of x-coordinate as function of y-coordinate
+    //x as function of parametrization variable
+    double xp(double p);
+    //y as function of parametrization variable
+    double yp(double p);
+    //derivative of x as function of parametrization variable
+    double dxp(double p);
+    //derivative of x as function of parametrization variable
+    double dyp(double p);
+    //derivative of x-coordinate as function of y-coordinate
+		virtual double yfunc(double p) = 0;
+    //derivative of x-coordinate as function of y-coordinate
+		virtual double yfuncd(double p) = 0;
 	public:
-		Horzline(double a, double b, bool dir) : Curvebase(a,b,dir) {}; //use same constructor as for Curvebase
+  //use same constructor as for Curvebase
+		Horzline(double a, double b, bool dir) : Curvebase(a,b,dir) {}; 
 		Horzline(); //default constructor
 		~Horzline();//default destructor
 };

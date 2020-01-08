@@ -1,5 +1,3 @@
-
-
 #include <iostream>
 #include <math.h>
 #include <cstdio>
@@ -21,13 +19,17 @@
 
 class LeftRightBorder : public Vertline {
 	private:
-		double x_pos; //fixed x-position
-		double xfunc(double p); //parametrization of x-coordinate
-		double xfuncd(double p); //derivative of x-coordinate parametrixation 
+  //fixed x-position
+		double x_pos;
+  //parametrization of x-coordinate
+		double xfunc(double p); 
+  //derivative of x-coordinate parametrixation 
+		double xfuncd(double p); 
 		
 
 	public:
-		LeftRightBorder(double a, double b, bool dir) : Vertline(a,b, dir) {}; //use same constructor as Vertline
+  //use same constructor as Vertline
+		LeftRightBorder(double a, double b, bool dir) : Vertline(a,b, dir) {}; 
 		~LeftRightBorder(); //default destructor
 		void setXpos(double p); //set fixed x-position
 		void setLength(void); //compute total curve length
@@ -60,11 +62,14 @@ double LeftRightBorder::xfuncd(double p){
 class TopBorder : public Horzline {
 	private:
 		double y_pos; //fixed y-position
-		double yfunc(double p); //y-coordinate parametrization
-		double yfuncd(double p);//derivative of y-coordinate parametrization
+  //y-coordinate parametrization
+		double yfunc(double p); 
+  //derivative of y-coordinate parametrization
+		double yfuncd(double p);
 
 	public:
-		TopBorder(double a, double b, bool dir) : Horzline(a,b,dir) {}; //use same constructor as Horzline
+  //use same constructor as Horzline
+		TopBorder(double a, double b, bool dir) : Horzline(a,b,dir) {};
 		~TopBorder(); //default destructor
 		void setYpos(double p); //set fixed y-position
 		void setLength(void); //compute length of boundary curve
@@ -98,12 +103,13 @@ double TopBorder::yfuncd(double p){
 //class for botto boundary curve
 class BottomBorder : public Horzline{
 	private:
-    double y_pos;
-		double yfunc(double p); //y-coordinate parametrization
-		double yfuncd(double p);//derivative of y-coordinate parametrization
+  //y-coordinate parametrization
+		double yfunc(double p); 
+  //derivative of y-coordinate parametrization
+		double yfuncd(double p);
 	public:
-  void setYpos(double p);
-		BottomBorder(double a, double b, bool dir) : Horzline(a,b,dir) {}; //use same constructor as Horzline
+  //use same constructor as Horzline
+		BottomBorder(double a, double b, bool dir) : Horzline(a,b,dir) {}; 
 		~BottomBorder(); //default destructor
 };
 
@@ -111,11 +117,6 @@ class BottomBorder : public Horzline{
 //default destructor
 
 BottomBorder::~BottomBorder(){};
-
-void BottomBorder::setYpos(double p){
-	y_pos = p;
-	return;
-}
 
 //y-coordinate parametrization
 
@@ -156,7 +157,6 @@ int main(){
   // Bottom Side
   std::shared_ptr<BottomBorder> botb( new BottomBorder(-10.0, 5.0, true));
 	botb->setLength();
-
 
   // Top Side
   std::shared_ptr<TopBorder> topb(new TopBorder(-10.0, 5.0, false));
