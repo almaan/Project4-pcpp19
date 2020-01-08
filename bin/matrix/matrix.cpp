@@ -56,8 +56,8 @@ Matrix& Matrix::operator=(Matrix&& B) {
 Matrix Matrix::operator+(const Matrix& B) const {
     Matrix C(this->m,this->n);
     int idx;
-    for (int i = 0; i < this->m; i++){
-      for (int j = 0; j < this->n; j++) {
+    for (int j = 0; j < this->n; j++){
+      for (int i = 0; i < this->m; i++) {
         idx = i + j*this->m;
         C.A[idx] = this->A[idx] + B.A[idx];
       }
@@ -67,8 +67,8 @@ Matrix Matrix::operator+(const Matrix& B) const {
 
 const Matrix& Matrix::operator+=(const Matrix& B){
     int idx;
-    for (int i = 0; i < this->m; i++){
-      for (int j = 0; j < this->n; j++) {
+    for (int j = 0; j < this->n; j++){
+      for (int i = 0; i < this->m; i++) {
         idx = i + j*this->m;
         this->A[idx] += B.A[idx];
       }
@@ -79,8 +79,8 @@ const Matrix& Matrix::operator+=(const Matrix& B){
 Matrix Matrix::operator-(const Matrix &B) const {
       int idx;
       Matrix C(this->m,this->n);
-      for (int i = 0; i < this->m; i++){
-        for (int j = 0; j < this->n; j++) {
+      for (int j = 0; j < this->n; j++){
+        for (int i = 0; i < this->m; i++) {
           idx = i + j*this->m;
           C.A[idx] = this->A[idx] - B.A[idx];
         }
@@ -90,8 +90,8 @@ Matrix Matrix::operator-(const Matrix &B) const {
 
 const Matrix& Matrix::operator-=(const Matrix& B){
     int idx;
-    for (int i = 0; i < this->m; i++){
-      for (int j = 0; j < this->n; j++) {
+    for (int j = 0; j < this->n; j++){
+      for (int i = 0; i < this->m; i++) {
         idx = i + j*this->m;
         this->A[idx] -= B.A[idx];
       }
@@ -102,8 +102,8 @@ const Matrix& Matrix::operator-=(const Matrix& B){
 Matrix Matrix::operator*(const double& b) const {
     int idx;
     Matrix C = Matrix(this->m,this->n);
-    for (int i = 0; i < this->m; i++){
-      for (int j = 0; j < this->n; j++) {
+    for (int j = 0; j < this->n; j++){
+      for (int i = 0; i < this->m; i++) {
         idx = i + j*this->m;
         C.A[idx] = this->A[idx]*b;
       }
@@ -115,8 +115,8 @@ Matrix Matrix::operator*(const double& b) const {
 Matrix Matrix::operator+(const double& b) const {
     int idx;
     Matrix C = Matrix(this->m,this->n);
-    for (int i = 0; i < this->m; i++){
-      for (int j = 0; j < this->n; j++) {
+    for (int j = 0; j < this->n; j++){
+      for (int i = 0; i < this->m; i++) {
         idx = i + j*this->m;
         C.A[idx] = this->A[idx]+b;
       }
@@ -127,8 +127,8 @@ Matrix Matrix::operator+(const double& b) const {
 Matrix Matrix::operator-(const double& b) const {
     int idx;
     Matrix C = Matrix(this->m,this->n);
-    for (int i = 0; i < this->m; i++){
-      for (int j = 0; j < this->n; j++) {
+    for (int j = 0; j < this->n; j++){
+      for (int i = 0; i < this->m; i++) {
         idx = i + j*this->m;
         C.A[idx] = this->A[idx]-b;
       }
@@ -148,8 +148,8 @@ Matrix Matrix::operator*=(const double& b) const {
 Matrix operator*(double &b, const Matrix& B){
   Matrix C = Matrix(B.m,B.n);
   int idx;
-  for (int i = 0; i < B.m; i++){
-    for (int j = 0; j < B.n; j++) {
+  for (int j = 0; j < B.n; j++){
+    for (int i = 0; i < B.m; i++) {
       idx = i + j*B.m;
       C.A[idx] = B.A[idx]*b;
     }

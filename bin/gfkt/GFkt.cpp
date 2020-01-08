@@ -7,6 +7,7 @@
 #include "../matrix/matrix.h"
 #include "../dom/domain.h"
 
+
 // *--- Constructors & Destructors ----*
 
 // copy constructor
@@ -121,21 +122,20 @@ double GFkt::dudxh(int i, int j) const {
   // midpoint difference, for inner points
   if ((i > 0) && (i < grid->xsize()-1)){
     diff =  this->u(i+1,j) - u(i-1,j);
-    return diff / (this->dxh * 2.0);
+    return diff * 0.5;
   }
   //forward one sided difference
   //for left side boundary
   else if (i == 0)
   {
-    diff = 3*this->u(i,j) - 4*this->u(i+1,j) + this->u(i+2,j);
-    return diff / (2.0 * this->dxh);
+    return (u(i,j)*3 - u(i+1,j)*4.0 + u(i+2,j) ) * (-0.5);
+
   }
   //backward one sided difference
   //for right side boundary
   else
   {
-    diff = -this->u(i-2,j) + 4*this->u(i-1,j) - 3 * this->u(i,j);
-    return diff / (2.0 * this->dxh);
+    return (u(i,j)*3 - u(i-1,j)*4.0 + u(i-2,j) ) * (0.5);
   }
 }
 
@@ -146,21 +146,19 @@ double GFkt::dudyh(int i, int j) const {
   // midpoint difference, for inner points
   if ((j > 0) && (j < grid->ysize()-1)){
     diff =  this->u(i,j+1) - this->u(i,j-1);
-    return diff / (this->dyh * 2.0);
+    return diff * 0.5;
   }
   //forward one sided difference
   //for bottom side boundary
   else if (j == 0)
     {
-      diff = 3*this->u(i,j) - 4*this->u(i,j+1) + this->u(i,j+2);
-      return diff / (2.0 * this->dyh);
+      return (u(i,j)*3 - u(i,j+1)*4.0 + u(i,j+2) ) * (-0.5);
     }
   else
     //backward one sided difference
     //for top side boundary
     {
-      diff = -this->u(i,j-2) + 4*this->u(i,j-1) - 3 * this->u(i,j);
-      return diff / (2.0 * this->dyh);
+      return (u(i,j)*3 - u(i,j-1)*4.0 + u(i,j-2) ) * (0.5);
     }
 }
 
@@ -174,24 +172,25 @@ Point<double> GFkt::dxd( int i, int j) const {
   if ((i > 0) && (i < grid->xsize()-1)){
     Point<double> Dp1 = (*grid)(i+1,j);
     Point<double> Dm1 = (*grid)(i-1,j);
-    D = (Dp1 - Dm1);
-    D *= ( 0.5 * (1.0 / this->dxh));
+    D = (Dp1 - Dm1)* 0.5;
   }
   //forward one sided difference
   //for left side boundary
   else if (i == 0)
   {
     Point<double> D0,Dp1,Dp2;
-    D0 = (*grid)(i,j); Dp1 = (*grid)(i+1,j); Dp2 = (*grid)(i+2,j);
-    D = D0*3.0 - Dp1*4.0 + Dp2;
-    D *= (1.0  /  (2.0 * this->dxh));
+    D0 = (*grid)(i,j); Dp1 = (*grid)(1,j); Dp2 = (*grid)(2,j);
+    return (D0*3.0 - Dp1*4.0 + Dp2 ) * (-0.5);
+
     //backward one sided difference
     //for right side boundary
-  } else {
+  }
+  else
+  {
     Point<double> D0,Dm1,Dm2;
     D0 = (*grid)(i,j); Dm1 = (*grid)(i-1,j); Dm2 = (*grid)(i-2,j);
-    D = D0*(-3.0) + Dm1*4.0 - Dm2;
-    D *= (1.0 / (2.0 * this->dxh));
+    return  (D0*3.0 - Dm1*4.0 + Dm2) * (0.5);
+
   }
   return D;
 }
@@ -206,17 +205,17 @@ Point<double> GFkt::dyd( int i, int j) const {
 
     Point<double> Dp1 = (*grid)(i,j+1);
     Point<double> Dm1 = (*grid)(i,j-1);
-    D = (Dp1 - Dm1);
-    D *= (0.5* (1.0 / this->dyh));
+    D = (Dp1 - Dm1) *  0.5;
   }
   //forward one sided difference
   //for bottom side boundary
   else if (j == 0)
     {
       Point<double> D0,Dp1,Dp2;
-      D0 = (*grid)(i,j); Dp1 = (*grid)(i,j+1); Dp2 = (*grid)(i,j+1);
-      D = D0*3.0 - Dp1*4.0 + Dp2;
-      D *= (1.0 / (2 * this->dyh));
+      D0 = (*grid)(i,j); Dp1 = (*grid)(i,j+1); Dp2 = (*grid)(i,j+2);
+      // return (D0*3.0 - Dp1*4.0 + Dp2 ) * (-0.5);
+      return (Dp1 - D0);
+
     }
   //backward one sided difference
   //for top side boundary
@@ -224,8 +223,9 @@ Point<double> GFkt::dyd( int i, int j) const {
     {
     Point<double> D0,Dm1,Dm2;
     D0 = (*grid)(i,j); Dm1 = (*grid)(i,j-1); Dm2 = (*grid)(i,j-2);
-    D = D0*(-3.0) + Dm1*4.0 - Dm2;
-    D *= (1.0 / (2.0 * this->dyh));
+    // return  (D0*3.0 - Dm1*4.0 + Dm2) * (0.5);
+    return (D0 - Dm1);
+
    
   }
   return D;
@@ -240,21 +240,23 @@ GFkt GFkt::D0x() const {
     GFkt tmp(this->grid); //return object
 
     // compute for all points
-    for (int i = 0; i < this->grid->xsize(); i++){
-      for (int j = 0; j < this->grid->ysize(); j++){
-
+    for (int j = 0; j < this->grid->ysize(); j++){
+      for (int i = 0; i < this->grid->xsize(); i++){
         // get partial derivatives w.r.t. cartesian coordinates
         dX = this->dxd(i,j);
         dY = this->dyd(i,j);
         // compute jacobian
         J = dX.getX()*dY.getY() -
             dY.getX()*dX.getY();
+
         // use Cramer's rule to obtain du/dx
-        tmp.u(i,j) = (1.0 / J) *
-                    (this->dudxh(i,j) *
+        tmp.u(i,j) =( 1.0/J ) *
+                    (
+                     (this->dudxh(i,j) *
                      dY.getY() -
                      this->dudyh(i,j) *
-                     dY.getX());
+                     dY.getX())
+                     );
 
       }
     }
@@ -275,8 +277,8 @@ GFkt GFkt::D0y() const {
 
     // compute for all points
     GFkt tmp(this->grid);
-    for (int i = 0; i < this->grid->xsize(); i++){
-      for (int j = 0; j < this->grid->ysize(); j++){
+    for (int j = 0; j < this->grid->ysize(); j++){
+      for (int i = 0; i < this->grid->xsize(); i++){
 
         // get partial derivatives w.r.t. cartesian coordinates
         dX = this->dxd(i,j);
@@ -284,12 +286,15 @@ GFkt GFkt::D0y() const {
         // compute jacobian
         J = dX.getX()*dY.getY() -
             dY.getX()*dX.getY();
+
         // use Cramer's rule to obtain du/dx
         tmp.u(i,j) = (1.0 / J) *
-          (this->dudyh(i,j) *
+          (
+           this->dudyh(i,j) *
            dX.getX() -
            this->dudxh(i,j) *
-           dX.getY());
+           dX.getY()
+           );
 
       }
     }
@@ -300,6 +305,8 @@ GFkt GFkt::D0y() const {
       return error();
     }
 }
+
+
 // Differential operator d^2/dx^2 + d^2/dy^2
 GFkt GFkt::del(void) const {
   // gridfuns to return
@@ -307,8 +314,9 @@ GFkt GFkt::del(void) const {
   GFkt del_part(this->grid);
 
   // compute first order partial derivatives
-  x_part = this->D0x();
-  y_part = this->D0y();
+   x_part = this->D0x();
+   y_part = this->D0y();
+
 
   // compute second order partial derivatives
   x_part = x_part.D0x();
@@ -328,8 +336,8 @@ void GFkt::printMat(void) const {
 // a user-provided function
 void GFkt::fillMat(double fun(double,double)) {
   Point<double> P;
-  for (int i = 0; i < this->grid->xsize(); i++){
-    for (int j = 0; j < this->grid->ysize(); j++){
+  for (int j = 0; j < this->grid->ysize(); j++){
+    for (int i = 0; i < this->grid->xsize(); i++){
       P = (*grid)(i,j);
       this->u(i,j) = fun(P.getX(),P.getY());
     }

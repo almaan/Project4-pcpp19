@@ -34,7 +34,7 @@ public:
   
   //*-- assignment operator overloading ---*
 		Domain& operator=(const Domain &d);
-    const Point<double> operator()(int i, int j) const;
+    Point<double> operator()(int i, int j) const;
     ~Domain() {
           delete [] x_;
           delete [] y_;
@@ -56,6 +56,11 @@ public:
     int xsize(void) const; 
     int ysize(void) const; 
     int npoints(void) const;
+
+    double dxdr(double r, double s);
+    double dxds(double r, double s);
+    double dydr(double r, double s);
+    double dyds(double r, double s);
   
     bool grid_valid() const;
 

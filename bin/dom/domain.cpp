@@ -65,13 +65,8 @@ Domain::Domain(std::shared_ptr<Curvebase> s1,
 	//assign curves to sides array
 	//convention of curve position within sides array
 	//is 0-left 1-bottom 2-right 3-top
+
 	//this is adjusted after initial assignation
-
-	// sides[0] = std::shared_ptr<Curvebase>(&s1); //left side
-	// sides[1] = std::shared_ptr<Curvebase>(&s2); //bottom side
-  // sides[2] = std::shared_ptr<Curvebase>(&s3); //right side
-	// sides[3] = std::shared_ptr<Curvebase>(&s4); //top side
-
 	sides[0] = s1; //left side
 	sides[1] = s2; //bottom side
   sides[2] = s3; //right side
@@ -89,10 +84,10 @@ Domain::Domain(std::shared_ptr<Curvebase> s1,
 
 };
 
-//returns pointer to boudary curve of sides array
-//with the provided index "s"
+// returns pointer to boundary curve of sides array
+// with the provided index "s"
 // std::shared_ptr<Curvebase>  Domain::getSide(int s) {
-// 	return sides[s];
+// return sides[s];
 // };
 std::shared_ptr<Curvebase> Domain::getSide(int s) {
 	return sides[s];
@@ -191,8 +186,8 @@ void Domain::make_grid(int m, int n){
 	x_ = new double [n_points]; //generate array to store x-coordinates in (dynamic)
 	y_ = new double [n_points]; //generate array to store y-coordinates in (dynamic)
 
-  for (int ii = 0; ii < m_; ii++){
-		for (int jj = 0; jj < n_; jj++){
+  for (int jj = 0; jj < n_; jj++){
+		for (int ii = 0; ii < m_; ii++){
 
 			x_[jj*m_ + ii] = xmap(dx*(double)ii, dy*(double)jj);
 			y_[jj*m_ + ii] = ymap(dx*(double)ii, dy*(double)jj);
@@ -300,7 +295,7 @@ bool Domain::grid_valid(void) const {
   return this->m_*this->n_ > 0;
 }
 
-const Point<double> Domain::operator()(int i, int j) const{
+Point<double> Domain::operator()(int i, int j) const{
   Point <double>P;
   if (this->grid_valid()){
     P.setX(x_[i + this->m_*j]);
@@ -311,3 +306,125 @@ const Point<double> Domain::operator()(int i, int j) const{
   }
   return P;
 }
+//x-coordinate mapping from unit square to domain
+double Domain::dxdr(double r, double s) {
+
+	//raise warning if r or s are not in [0,1]
+	if (s < 0 || s > 1 || r < 0 || r > 1) {
+		std::cout << "x(r,s) : parameters out of bound" << std::endl;
+	}
+
+	//transform relative y-coordinate if adjusted
+	//resolution should be used
+	if (lower_resolve){
+		s = sigmaT(s);
+	}
+
+	//transfinite interpolation
+
+	//positive terms
+  double pos = (-1.0)*sides[0]->x(s) +
+    sides[2]->x(s) + 
+    (1.-s)*sides[1]->x(r) +
+    s*sides[3]->	x(r);
+
+	//negative terms
+	double neg = -1.0*(1.-s)*sides[0]->x(0.0) + 
+    (1.-s)*sides[1]->x(1.0) +
+    (-1.0)*s*sides[3]->x(0.0) +
+    s*sides[2]->x(1.0); 
+
+	return pos - neg;
+};
+
+//x-coordinate mapping from unit square to domain
+double Domain::dydr(double r, double s) {
+
+	//raise warning if r or s are not in [0,1]
+	if (s < 0 || s > 1 || r < 0 || r > 1) {
+		std::cout << "x(r,s) : parameters out of bound" << std::endl;
+	}
+
+	//transform relative y-coordinate if adjusted
+	//resolution should be used
+	if (lower_resolve){
+		s = sigmaT(s);
+	}
+
+	//transfinite interpolation
+
+    //positive terms
+  double pos = (-1.0)*sides[0]->y(s) +
+    sides[2]->y(s) + 
+    (1.-s)*sides[1]->y(r) +
+    s*sides[3]->	y(r);
+
+    //negative terms
+    double neg = -1.0*(1.-s)*sides[0]->y(0.0) + 
+    (1.-s)*sides[1]->y(1.0) +
+    (-1.0)*s*sides[3]->y(0.0) +
+    s*sides[2]->y(1.0); 
+
+	return pos - neg;
+};
+
+double Domain::dyds(double r, double s) {
+
+	//raise warning if r or s are not in [0,1]
+	if (s < 0 || s > 1 || r < 0 || r > 1) {
+		std::cout << "y(r,s): parameters out of bound" << std::endl;
+	}
+
+	//transform relative y-coordinate if adjusted
+	//resolution should be used
+	if (lower_resolve){
+		s = sigmaT(s);
+	}
+
+	//transfinite interpolation
+
+
+	//positive terms
+	double pos = (1.-r)*(-1.0)*sides[0]->y(0.0) + 
+    r*(-1.0)*sides[1]->y(1.0) +
+    (1-r)*sides[3]->y(0.0) +
+    r*sides[2]->y(1.0);
+
+	double neg = (1.-r)*(-1.0)*sides[0]->y(0.0) + 
+    r*(-1.0)*sides[1]->y(1.0) +
+    (1-r)*sides[3]->y(0.0) +
+    r*sides[2]->y(1.0);
+
+	return pos - neg;
+};
+
+double Domain::dxds(double r, double s) {
+
+	//raise warning if r or s are not in [0,1]
+	if (s < 0 || s > 1 || r < 0 || r > 1) {
+		std::cout << "y(r,s): parameters out of bound" << std::endl;
+	}
+
+	//transform relative y-coordinate if adjusted
+	//resolution should be used
+	if (lower_resolve){
+		s = sigmaT(s);
+	}
+
+
+	//transfinite interpolation
+
+
+	//positive terms
+	double pos = (1. - r)*sides[0]->x(s) +
+    r*sides[2]->x(s) + 
+    (-1.0)*sides[1]->x(r) +
+    sides[3]->x(r);
+
+	double neg = (1.-r)*(-1.0)*sides[0]->x(0.0) + 
+    r*(-1.0)*sides[1]->x(1.0) +
+    (1-r)*sides[3]->x(0.0) +
+    r*sides[2]->x(1.0);
+
+	return pos - neg;
+};

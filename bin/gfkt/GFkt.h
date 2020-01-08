@@ -59,7 +59,6 @@ public:
   Point<double> dxd(int i, int j) const;
   Point<double> dyd(int i, int j) const;
 
-
   // differential operators
   GFkt D0x() const; //partial_x
   GFkt D0y() const; //partial_y

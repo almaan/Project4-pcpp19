@@ -111,8 +111,8 @@ double Curvebase::solve(double s) {
 	
 	//set initial guess to length of
 	//line segment between endpoints
-	double p = s*(pmax - pmin); 
-	double p_new;
+	double p;
+	double p_new  = s*(pmax - pmin);
 	double eps = 1e-8;
 
 	int n_iter = 0;

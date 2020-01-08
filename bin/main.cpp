@@ -1,7 +1,7 @@
 
 
 #include <iostream>
-#include <cmath>
+#include <math.h>
 #include <cstdio>
 #include <string>
 #include <memory>
@@ -98,55 +98,34 @@ double TopBorder::yfuncd(double p){
 //class for botto boundary curve
 class BottomBorder : public Horzline{
 	private:
+    double y_pos;
 		double yfunc(double p); //y-coordinate parametrization
 		double yfuncd(double p);//derivative of y-coordinate parametrization
 	public:
+  void setYpos(double p);
 		BottomBorder(double a, double b, bool dir) : Horzline(a,b,dir) {}; //use same constructor as Horzline
 		~BottomBorder(); //default destructor
 };
 
+
 //default destructor
+
 BottomBorder::~BottomBorder(){};
 
+void BottomBorder::setYpos(double p){
+	y_pos = p;
+	return;
+}
+
 //y-coordinate parametrization
+
 double BottomBorder::yfunc(double p){
-	if (p < (-3.0)) {
-		return 0.5*(1.0/(1.0 +exp(-3.0*(p+6.0))));
-	
-	} else if ( p >= -3.0){
-		return 0.5*(1.0/(1.0 + exp(3.0*p)));
-	
-	} else {
-		
-		std::cout << "Bottom func: Error fetching point > " << p << std::endl;
-		return 0;
-	}
+  return 0.01*(p+10.0)*(5.0-p);
+}
 
-};
-
-//derivative of  y-function parametrization
 double BottomBorder::yfuncd(double p){
-	if (p < -3) {
-    
-		double nom = exp(-3.0*p - 18.0*p);
-		double den = pow(exp(1.0 + exp(-3.0*p - 18.0*p)),2.0);
-	
-		return 1.5 * nom / den;
-	
-	} else if ( p >= -3.0){
-	
-		double nom = exp(3.0*p);
-		double den = pow((1.0 + exp(3.0*p)),2.0);
-	
-		return -1.5 * nom / den;
-
-	} else {
-	
-		std::cout << "Bottom funcd: Error fetching point > " << p << std::endl;
-		return 0;
-	}
-
-};
+  return 0.01*(-2.0*p - 5.0);
+}
 
 // *--- Helper Functions ---*
 
@@ -155,6 +134,7 @@ double BottomBorder::yfuncd(double p){
 double ufun(double x, double y){
   return(sin(x*x/100.0)*cos(x/10.0) + y);
 }
+
 
 //*--- Main Program ---*
 
@@ -176,7 +156,7 @@ int main(){
   // Bottom Side
   std::shared_ptr<BottomBorder> botb( new BottomBorder(-10.0, 5.0, true));
 	botb->setLength();
-	botb->printInfo();
+
 
   // Top Side
   std::shared_ptr<TopBorder> topb(new TopBorder(-10.0, 5.0, false));
@@ -198,8 +178,9 @@ int main(){
   std::cout << "[Enter] ncols : ";
   std::cin >> n_cols;
   
-  omega->doLowerResolve(true);
+  std::cout << "[START] Constructing grid" << std::endl;
   omega->make_grid(n_rows, n_cols);
+  std::cout << "[END] Constructing grid" << std::endl;
 
   // *--- Perform computations on domain ---*
 
@@ -212,22 +193,23 @@ int main(){
 
   // Create new objects to hold results
   // from differential operators
-
+  std::cout << "[START] Compute Differential Operators " << std::endl;
   // For partial_x
   GFkt dudx(gf);
   // For partial_y
   GFkt dudy(gf);
   // For laplacian
   GFkt ulap(gf);
+  std::cout << "[END] Compute Differential Operators " << std::endl;
 
   // perform computations
 
   //d/dx
-  dudx = gf.D0x();
+  dudx = dudx.D0x();
   //d/dy
-  dudy = gf.D0y();
+  dudy = dudy.D0y();
   // d^2/dx^ + d^2/dy^2
-  ulap = gf.del();
+  ulap = ulap.del();
 
   // *--- Save Results ---*
 
@@ -237,11 +219,14 @@ int main(){
   std::string dudydir = "../res/partial_y";
   std::string ulapdir = "../res/laplacian";
 
+  std::cout << "[START] Save Data " << std::endl;
   // write to files
   gf.saveData(ufundir);
   dudx.saveData(dudxdir);
   dudy.saveData(dudydir);
   ulap.saveData(ulapdir);
+
+  std::cout << "[END] Save Data " << std::endl;
 
 	return 0;
 }
